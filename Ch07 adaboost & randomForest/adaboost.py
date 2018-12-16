@@ -203,14 +203,14 @@ def plotROC(predStrengths, classLabels):
 
 if __name__ == '__main__':
     # AdaBoost
-    dataArr, classLabels = loadSimpData()
-    weakClassArr, aggClassEst = adaBoostTrainDS(dataArr, classLabels)
-    print(adaClassify([[0, 0], [5, 5]], weakClassArr))
+    # dataArr, classLabels = loadSimpData()
+    # weakClassArr, aggClassEst = adaBoostTrainDS(dataArr, classLabels)
+    # print(adaClassify([[0, 0], [5, 5]], weakClassArr))
 
     # 马疝病的预测
-    # dataArr, LabelArr = loadDataSet('horseColicTraining2.txt')
-    # weakClassArr, aggClassEst = adaBoostTrainDS(dataArr, LabelArr, 50)
-    # plotROC(aggClassEst.T, LabelArr)
+    dataArr, LabelArr = loadDataSet('horseColicTraining2.txt')
+    weakClassArr, aggClassEst = adaBoostTrainDS(dataArr, LabelArr, 50)
+    plotROC(aggClassEst.T, LabelArr)
 
 '''
 集成方法: ensemble method（元算法: meta algorithm） 概述:
@@ -246,3 +246,26 @@ bagging 和 boosting 区别:
 '''
 
 
+'''
+AdaBoost 原理
+
+    AdaBoost 工作原理
+        ·见图adaboost_illustration.png
+        
+    AdaBoost 开发流程
+        
+        ·收集数据：可以使用任意方法
+        ·准备数据：依赖于所使用的弱分类器类型，本章使用的是单层决策树，这种分类器可以处理任何数据类型。
+                   当然也可以使用任意分类器作为弱分类器，第2章到第6章中的任一分类器都可以充当弱分类器。
+                   作为弱分类器，简单分类器的效果更好。
+        ·分析数据：可以使用任意方法。
+        ·训练算法：AdaBoost 的大部分时间都用在训练上，分类器将多次在同一数据集上训练弱分类器。
+        ·测试算法：计算分类的错误率。
+        ·使用算法：通SVM一样，AdaBoost 预测两个类别中的一个。如果想把它应用到多个类别的场景，那么就要像多类 SVM 中的做法一样对 AdaBoost 进行修改。
+        
+    AdaBoost 算法特点
+        
+        * 优点：泛化（由具体的、个别的扩大为一般的）错误率低，易编码，可以应用在大部分分类器上，无参数调节。
+        * 缺点：对离群点敏感。
+        * 适用数据类型：数值型和标称型数据。
+'''
