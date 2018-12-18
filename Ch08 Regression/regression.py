@@ -8,11 +8,31 @@
 import numpy as np
 import matplotlib.pylab as plt
 from matplotlib.font_manager import FontProperties
-from time import sleep
-import bs4
-from bs4 import BeautifulSoup
-import json
-from urllib import request
+
+'''
+线性回归 工作原理
+
+    1. 读入数据，将数据特征x、特征标签y存储在矩阵x、y中
+    2. 验证 x^Tx 矩阵是否可逆
+    3. 使用最小二乘法求得 回归系数 w 的最佳估计
+
+线性回归 开发流程
+
+    ·收集数据: 采用任意方法收集数据
+    ·准备数据: 回归需要数值型数据，标称型数据将被转换成二值型数据
+    ·分析数据: 绘出数据的可视化二维图将有助于对数据做出理解和分析，在采用缩减法求得新回归系数之后，可以将新拟合线绘在图上作为对比
+    ·训练算法: 找到回归系数
+    ·测试算法: 使用 R^2 或者预测值和数据的拟合度，来分析模型的效果
+    ·使用算法: 使用回归，可以在给定输入的时候预测出一个数值，这是对分类方法的提升，因为这样可以预测连续型数据而不仅仅是离散的类别标签
+
+
+线性回归 算法特点
+
+    优点：结果易于理解，计算上不复杂。
+    缺点：对非线性的数据拟合不好。
+    适用于数据类型：数值型和标称型数据。
+
+'''
 
 
 def loadDataSet(fileName):
@@ -71,7 +91,8 @@ def standRegres(xArr, yArr):
     return ws
 
 
-def regression1(filename):
+###### 测试线性回归 ######
+def regression(filename):
     '''
     测试线性回归
     Args:
@@ -92,6 +113,20 @@ def regression1(filename):
     yHat = xCopy * ws
     ax.plot(xCopy[:, 1], yHat)
     plt.show()
+
+
+'''
+局部加权线性回归(lwlr)
+
+    线性回归的一个问题是有可能出现欠拟合现象，因为它求的是具有最小均方差的无偏估计
+
+    局部加权线性回归 工作原理
+
+        ·读入数据，将数据特征x、特征标签y存储在矩阵x、y中
+        ·利用高斯核构造一个权重矩阵 W，对预测点附近的点施加权重
+        ·验证 X^TWX 矩阵是否可逆
+        ·使用最小二乘法求得 回归系数 w 的最佳估计    
+'''
 
 
 def lwlr(testPoint, xArr, yArr, k=1.0):
@@ -183,8 +218,10 @@ def lwlrTestPlot(xArr, yArr, k=1.0):
     return yHat, xCopy
 
 
+###### 局部加权线性回归测试 ######
+'''
 def regression2(filename, k):
-    '''
+    """
     局部加权线性回归测试
     Args:
         filename: 输入文件
@@ -192,7 +229,7 @@ def regression2(filename, k):
 
     Returns:
 
-    '''
+    """
     xArr, yArr = loadDataSet(filename)
     yHat = lwlrTest(xArr, xArr, yArr, k)
     xMat = np.mat(xArr)
@@ -204,7 +241,90 @@ def regression2(filename, k):
     ax.scatter([xMat[:, 1].flatten().A[0]], [np.mat(yArr).T.flatten().A[0]], s=2, c='red')
     plt.show()
 
+'''
 
+
+def plotDataSet():
+    '''
+    绘制数据集
+    Returns:
+
+    '''
+    xArr, yArr = loadDataSet('ex0.txt')  # 加载数据集
+    n = len(xArr)  # 数据个数
+    xcord = []
+    ycord = []  # 样本点
+    for i in range(n):
+        xcord.append(xArr[i][1])
+        ycord.append(yArr[i])  # 样本点
+    fig = plt.figure()
+    ax = fig.add_subplot(111)  # 添加subplot
+    ax.scatter(xcord, ycord, s=20, c='blue', alpha=.5)  # 绘制样本点
+    plt.title('DataSet')  # 绘制title
+    plt.xlabel('X')
+    plt.show()
+
+
+def plotRegression():
+    '''
+    绘制回归曲线和数据点
+    Returns:
+
+    '''
+    xArr, yArr = loadDataSet('ex0.txt')  # 加载数据集
+    ws = standRegres(xArr, yArr)  # 计算回归系数
+    xMat = np.mat(xArr)  # 创建xMat矩阵
+    yMat = np.mat(yArr)  # 创建yMat矩阵
+    xCopy = xMat.copy()  # 深拷贝xMat矩阵
+    xCopy.sort(0)  # 排序
+    yHat = xCopy * ws  # 计算对应的y值
+    fig = plt.figure()
+    ax = fig.add_subplot(111)  # 添加subplot
+    ax.plot(xCopy[:, 1], yHat, c='red')  # 绘制回归曲线
+    ax.scatter(xMat[:, 1].flatten().A[0], yMat.flatten().A[0], s=20, c='blue', alpha=.5)  # 绘制样本点
+    plt.title('DataSet')  # 绘制title
+    plt.xlabel('X')
+    plt.show()
+
+
+def plotlwlrRegression():
+    '''
+    绘制多条局部加权回归曲线
+    Returns:
+
+    '''
+    font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
+    xArr, yArr = loadDataSet('ex0.txt')  # 加载数据集
+    yHat_1 = lwlrTest(xArr, xArr, yArr, 1.0)  # 根据局部加权线性回归计算yHat
+    yHat_2 = lwlrTest(xArr, xArr, yArr, 0.01)  # 根据局部加权线性回归计算yHat
+    yHat_3 = lwlrTest(xArr, xArr, yArr, 0.003)  # 根据局部加权线性回归计算yHat
+    xMat = np.mat(xArr)  # 创建xMat矩阵
+    yMat = np.mat(yArr)  # 创建yMat矩阵
+    srtInd = xMat[:, 1].argsort(0)  # 排序，返回索引值
+    xSort = xMat[srtInd][:, 0, :]
+    fig, axs = plt.subplots(nrows=3, ncols=1, sharex=False, sharey=False, figsize=(10, 8))
+
+    axs[0].plot(xSort[:, 1], yHat_1[srtInd], c='red')  # 绘制回归曲线
+    axs[1].plot(xSort[:, 1], yHat_2[srtInd], c='red')  # 绘制回归曲线
+    axs[2].plot(xSort[:, 1], yHat_3[srtInd], c='red')  # 绘制回归曲线
+    axs[0].scatter(xMat[:, 1].flatten().A[0], yMat.flatten().A[0], s=20, c='blue', alpha=.5)  # 绘制样本点
+    axs[1].scatter(xMat[:, 1].flatten().A[0], yMat.flatten().A[0], s=20, c='blue', alpha=.5)  # 绘制样本点
+    axs[2].scatter(xMat[:, 1].flatten().A[0], yMat.flatten().A[0], s=20, c='blue', alpha=.5)  # 绘制样本点
+
+    # 设置标题,x轴label,y轴label
+    axs0_title_text = axs[0].set_title(u'局部加权回归曲线,k=1.0', FontProperties=font)
+    axs1_title_text = axs[1].set_title(u'局部加权回归曲线,k=0.01', FontProperties=font)
+    axs2_title_text = axs[2].set_title(u'局部加权回归曲线,k=0.003', FontProperties=font)
+
+    plt.setp(axs0_title_text, size=8, weight='bold', color='red')
+    plt.setp(axs1_title_text, size=8, weight='bold', color='red')
+    plt.setp(axs2_title_text, size=8, weight='bold', color='red')
+
+    plt.xlabel('X')
+    plt.show()
+
+
+###### 预测鲍鱼的年龄 ######
 def rssError(yArr, yHatArr):
     '''
     计算分析预测误差的大小
@@ -216,6 +336,53 @@ def rssError(yArr, yHatArr):
         计算真实值和估计值得到的值的平方和作为最后的返回值
     '''
     return ((yArr - yHatArr) ** 2).sum()
+
+
+def abaloneTest():
+    '''
+    预测鲍鱼的年龄
+    Args:
+        None
+    Returns:
+        None
+    '''
+    # 加载数据
+    abX, abY = loadDataSet("abalone.txt")
+    # 使用不同的核进行预测
+    oldyHat01 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 0.1)
+    oldyHat1 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 1)
+    oldyHat10 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 10)
+    # 打印出不同的核预测值与训练数据集上的真实值之间的误差大小
+    print("old yHat01 error Size is :", rssError(abY[0:99], oldyHat01.T))
+    print("old yHat1 error Size is :", rssError(abY[0:99], oldyHat1.T))
+    print("old yHat10 error Size is :", rssError(abY[0:99], oldyHat10.T))
+
+    # 打印出 不同的核预测值 与 新数据集（测试数据集）上的真实值之间的误差大小
+    newyHat01 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 0.1)
+    print("new yHat01 error Size is :", rssError(abY[0:99], newyHat01.T))
+    newyHat1 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 1)
+    print("new yHat1 error Size is :", rssError(abY[0:99], newyHat1.T))
+    newyHat10 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 10)
+    print("new yHat10 error Size is :", rssError(abY[0:99], newyHat10.T))
+
+    # 使用简单的 线性回归 进行预测，与上面的计算进行比较
+    standWs = standRegres(abX[0:99], abY[0:99])
+    standyHat = np.mat(abX[100:199]) * standWs
+    print("standRegress error Size is:", rssError(abY[100:199], standyHat.T.A))
+
+
+'''
+缩减系数来 “理解” 数据
+
+    如果特征比样本点还多(n > m)，也就是说输入数据的矩阵 x 不是满秩矩阵。非满秩矩阵求逆时会出现问题。
+    引入 岭回归（ridge regression） 缩减方法。接着是 lasso法，最后 前向逐步回归。
+
+    岭回归就是在矩阵 XTX 上加一个 λI 从而使得矩阵非奇异，进而能对 XTX+λI 求逆。
+
+    这里通过引入 λ 来限制了所有 w 之和，通过引入该惩罚项，能够减少不重要的参数，这个技术在统计学中也叫作 缩减(shrinkage)。
+
+    缩减方法可以去掉不重要的参数，因此能更好地理解数据。此外，与简单的线性回归相比，缩减法能取得更好的预测效果。
+'''
 
 
 def ridgeRegres(xMat, yMat, lam=0.2):
@@ -334,7 +501,9 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
 
 def plotstageWiseMat():
     '''
-    函数说明:绘制岭回归系数矩阵
+    绘制岭回归系数矩阵
+
+    Args:
 
     Returns:
 
@@ -354,68 +523,17 @@ def plotstageWiseMat():
     plt.show()
 
 
-def abaloneTest():
-    '''
-    Desc:
-        预测鲍鱼的年龄
-    Args:
-        None
-    Returns:
-        None
-    '''
-    # 加载数据
-    abX, abY = loadDataSet("abalone.txt")
-    # 使用不同的核进行预测
-    oldyHat01 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 0.1)
-    oldyHat1 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 1)
-    oldyHat10 = lwlrTest(abX[0:99], abX[0:99], abY[0:99], 10)
-    # 打印出不同的核预测值与训练数据集上的真实值之间的误差大小
-    print("old yHat01 error Size is :", rssError(abY[0:99], oldyHat01.T))
-    print("old yHat1 error Size is :", rssError(abY[0:99], oldyHat1.T))
-    print("old yHat10 error Size is :", rssError(abY[0:99], oldyHat10.T))
-
-    # 打印出 不同的核预测值 与 新数据集（测试数据集）上的真实值之间的误差大小
-    newyHat01 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 0.1)
-    print("new yHat01 error Size is :", rssError(abY[0:99], newyHat01.T))
-    newyHat1 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 1)
-    print("new yHat1 error Size is :", rssError(abY[0:99], newyHat1.T))
-    newyHat10 = lwlrTest(abX[100:199], abX[0:99], abY[0:99], 10)
-    print("new yHat10 error Size is :", rssError(abY[0:99], newyHat10.T))
-
-    # 使用简单的 线性回归 进行预测，与上面的计算进行比较
-    standWs = standRegres(abX[0:99], abY[0:99])
-    standyHat = np.mat(abX[100:199]) * standWs
-    print("standRegress error Size is:", rssError(abY[100:199], standyHat.T.A))
-
-
 if __name__ == '__main__':
-    # regression1('ex0.txt')
-    # regression1('ex1.txt')
+    # 绘制线性回归
+    regression('ex0.txt')
+    # regression('ex1.txt')
+
+    # 绘制局部加权线性回归
     # regression2('ex0.txt', k=1)
     # regression2('ex1.txt', k=0.01)
     # regression2('ex1.txt', k=0.003)
+    plotlwlrRegression()
+
+    # 绘制岭回归
     plotstageWiseMat()
-'''
-线性回归 工作原理
-    
-    1. 读入数据，将数据特征x、特征标签y存储在矩阵x、y中
-    2. 验证 x^Tx 矩阵是否可逆
-    3. 使用最小二乘法求得 回归系数 w 的最佳估计
-
-线性回归 开发流程
-
-    ·收集数据: 采用任意方法收集数据
-    ·准备数据: 回归需要数值型数据，标称型数据将被转换成二值型数据
-    ·分析数据: 绘出数据的可视化二维图将有助于对数据做出理解和分析，在采用缩减法求得新回归系数之后，可以将新拟合线绘在图上作为对比
-    ·训练算法: 找到回归系数
-    ·测试算法: 使用 R^2 或者预测值和数据的拟合度，来分析模型的效果
-    ·使用算法: 使用回归，可以在给定输入的时候预测出一个数值，这是对分类方法的提升，因为这样可以预测连续型数据而不仅仅是离散的类别标签
-
-
-线性回归 算法特点
-    
-    优点：结果易于理解，计算上不复杂。
-    缺点：对非线性的数据拟合不好。
-    适用于数据类型：数值型和标称型数据。
-
-'''
+    pass
