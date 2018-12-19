@@ -24,6 +24,7 @@ import os
     使用算法：产生简单的命令行程序，然后海伦可以输入一些特征数据以判断对方是否为自己喜欢的类型。
 '''
 
+
 def createDataSet():
     group = np.array([[1.0, 1.1], [1.0, 1.0], [0, 0], [0, 0.1]])
     labels = ['A', 'A', 'B', 'B']
@@ -56,6 +57,16 @@ def classify0(inX, dataSet, labels, k):
     return sortedClassCount[0][0]
 
 
+def test1():
+    """
+    第一个例子演示
+    """
+    group, labels = createDataSet()
+    print(str(group))
+    print(str(labels))
+    print(classify0([0.1, 0.1], group, labels, 3))
+
+
 def file2matrix(filename):
     '''
     文本记录转换为 NumPy
@@ -84,7 +95,7 @@ def file2matrix(filename):
 
 
 # 使用 Matplotlib 画二维散点图
-# datingDataMat, datingLabels = file2matrix('datingTestSet2.txt')
+# datingDataMat, datingLabels = file2matrix('../data/ch02/datingTestSet2.txt')
 # fig = plt.figure()
 # ax = fig.add_subplot(111)
 # ax.scatter(datingDataMat[:, 1], datingDataMat[:, 2])
@@ -125,7 +136,7 @@ def datingClassTest():
     # 设置测试数据的的一个比例（训练数据集比例=1-hoRatio）
     hoRatio = 0.1  # 测试范围,一部分测试一部分作为样本
     # 从文件中加载数据
-    datingDataMat, datingLabels = file2matrix('input/2.KNN/datingTestSet2.txt')  # load data setfrom file
+    datingDataMat, datingLabels = file2matrix('../data/ch02/datingTestSet2.txt')  # load data setfrom file
     # 归一化数据
     normMat, ranges, minVals = autoNorm(datingDataMat)
     # m 表示数据的行数，即矩阵的第一维
@@ -183,7 +194,7 @@ def handwritingClassTest():
     '''
     # 1.导入训练数据
     hwLabels = []
-    trainingFileList = os.listdir('input/2.KNN/trainingDigits')  # load the training set
+    trainingFileList = os.listdir('../data/ch02/trainingDigits')  # load the training set
     m = len(trainingFileList)
     trainingMat = np.zeros((m, 1024))
     # hwLabels存储0～9对应的index位置， trainingMat存放的每个位置对应的图片向量
@@ -193,23 +204,28 @@ def handwritingClassTest():
         classNumStr = int(fileStr.split('_')[0])
         hwLabels.append(classNumStr)
         # 将 32*32的矩阵->1*1024的矩阵
-        trainingMat[i, :] = img2vector('input/2.KNN/trainingDigits/%s' % fileNameStr)
+        trainingMat[i, :] = img2vector('../data/ch02/trainingDigits/%s' % fileNameStr)
 
     # 2.导入测试数据
-    testFileList = os.listdir('testDigits')  # iterate through the test set
+    testFileList = os.listdir('../data/ch02/testDigits')  # iterate through the test set
     errorCount = 0.0
     mTest = len(testFileList)
     for i in range(mTest):
         fileNameStr = testFileList[i]
         fileStr = fileNameStr.split('.')[0]  # take off .txt
         classNumStr = int(fileStr.split('_')[0])
-        vectorUnderTest = img2vector('input/2.KNN/testDigits/%s' % fileNameStr)
+        vectorUnderTest = img2vector('../data/ch02/testDigits/%s' % fileNameStr)
         classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
         print("the classifier came back with: %d, the real answer is: %d" % (classifierResult, classNumStr))
         if (classifierResult != classNumStr): errorCount += 1.0
     print("\nthe total number of errors is: %d" % errorCount)
     print("\nthe total error rate is: %f" % (errorCount / float(mTest)))
 
+
+if __name__ == '__main__':
+    test1()
+    datingClassTest()
+    handwritingClassTest()
 
 '''
 KNN 概述:

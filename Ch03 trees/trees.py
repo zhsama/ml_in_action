@@ -5,9 +5,9 @@
 # @Site    : 
 # @File    : trees.py
 # @Software: PyCharm
-import numpy as np
 from math import log
 import operator
+import decisionTreePlot as dtPlot
 
 
 def calcShannonEnt(dataSet):
@@ -178,6 +178,63 @@ def grabTree(filename):
     return pickle.load(fr)
 
 
+def fishTest():
+    """
+    对动物是否是鱼类分类的测试函数，并将结果使用 matplotlib 画出来
+    Args:
+        None
+    Returns:
+        None
+    """
+    # 1.创建数据和结果标签
+    myDat, labels = createDataSet()
+    # print(myDat, labels)
+
+    # 计算label分类标签的香农熵
+    # calcShannonEnt(myDat)
+
+    # # 求第0列 为 1/0的列的数据集【排除第0列】
+    # print('1---', splitDataSet(myDat, 0, 1))
+    # print('0---', splitDataSet(myDat, 0, 0))
+
+    # # 计算最好的信息增益的列
+    # print(chooseBestFeatureToSplit(myDat))
+
+    import copy
+    myTree = createTree(myDat, copy.deepcopy(labels))
+    print(myTree)
+    # [1, 1]表示要取的分支上的节点位置，对应的结果值
+    print(classify(myTree, labels, [1, 1]))
+
+    # 画图可视化展现
+    dtPlot.createPlot(myTree)
+
+
+def ContactLensesTest():
+    """
+    预测隐形眼镜的测试代码，并将结果画出来
+    Args:
+        none
+    Returns:
+        none
+    """
+
+    # 加载隐形眼镜相关的 文本文件 数据
+    fr = open('../data/ch03/lenses.txt')
+    # 解析数据，获得 features 数据
+    lenses = [inst.strip().split('\t') for inst in fr.readlines()]
+    # 得到数据的对应的 Labels
+    lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
+    # 使用上面的创建决策树的代码，构造预测隐形眼镜的决策树
+    lensesTree = createTree(lenses, lensesLabels)
+    print(lensesTree)
+    # 画图可视化展现
+    dtPlot.createPlot(lensesTree)
+
+
+if __name__ == "__main__":
+    fishTest()
+    # ContactLensesTest()
 '''
 决策树概述
 

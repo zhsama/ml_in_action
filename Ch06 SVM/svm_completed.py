@@ -420,7 +420,7 @@ def loadImages(dirName):
 
 def testDigits(kTup=('rbf', 10)):
     # 1. 导入训练数据
-    dataArr, labelArr = loadImages('trainingDigits')
+    dataArr, labelArr = loadImages('../data/ch06/trainingDigits')
     b, alphas = smoP(dataArr, labelArr, 200, 0.0001, 10000, kTup)
     datMat = mat(dataArr)
     labelMat = mat(labelArr).transpose()
@@ -437,7 +437,7 @@ def testDigits(kTup=('rbf', 10)):
         if sign(predict) != sign(labelArr[i]): errorCount += 1
     print("the training error rate is: %f" % (float(errorCount) / m))
     # 2. 导入测试数据
-    dataArr, labelArr = loadImages('testDigits')
+    dataArr, labelArr = loadImages('../data/ch06/trainingDigits')
     errorCount = 0
     datMat = mat(dataArr)
     labelMat = mat(labelArr).transpose()
@@ -447,7 +447,7 @@ def testDigits(kTup=('rbf', 10)):
         predict = kernelEval.T * multiply(labelSV, alphas[svInd]) + b
         if sign(predict) != sign(labelArr[i]): errorCount += 1
     print("the test error rate is: %f" % (float(errorCount) / m))
-    dataArr, labelArr = loadImages('trainingDigits')
+    dataArr, labelArr = loadImages('../data/ch06/trainingDigits')
     b, alphas = smoP(dataArr, labelArr, 200, 0.0001, 10000, kTup)
     datMat = mat(dataArr)
     labelMat = mat(labelArr).transpose()
@@ -462,7 +462,7 @@ def testDigits(kTup=('rbf', 10)):
         predict = kernelEval.T * multiply(labelSV, alphas[svInd]) + b
         if sign(predict) != sign(labelArr[i]): errorCount += 1
     print("the training error rate is: %f" % (float(errorCount) / m))
-    dataArr, labelArr = loadImages('testDigits')
+    dataArr, labelArr = loadImages('../data/ch06/trainingDigits')
     errorCount = 0
     datMat = mat(dataArr)
     labelMat = mat(labelArr).transpose()

@@ -5,14 +5,17 @@
 # @Site    : 
 # @File    : logistc_sklearn.py
 # @Software: PyCharm
-# 逻辑回归中的 L1 惩罚和稀缺性 L1 Penalty and Sparsity in Logistic Regression
 
-print(__doc__)
+# 逻辑回归中的 L1 惩罚和稀缺性 L1 Penalty and Sparsity in Logistic Regression
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LogisticRegression
+from sklearn import linear_model
 from sklearn import datasets
-from sklearn.preprocessing import StandardScaler
+from sklearn.svm import l1_min_c
+
 digits = datasets.load_digits()
 X, y = digits.data, digits.target
 X = StandardScaler().fit_transform(X)
@@ -53,16 +56,9 @@ for i, C in enumerate((100, 1, 0.01)):
     l2_plot.set_yticks(())
 plt.show()
 
-
 # 具有 L1-逻辑回归的路径
 
-print(__doc__)
-from datetime import datetime
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn import linear_model
-from sklearn import datasets
-from sklearn.svm import l1_min_c
+
 iris = datasets.load_iris()
 X = iris.data
 y = iris.target
@@ -88,7 +84,6 @@ plt.title('Logistic Regression Path')
 plt.axis('tight')
 plt.show()
 
-
 # 绘制多项式和一对二的逻辑回归 Plot multinomial and One-vs-Rest Logistic Regression
 
 print(__doc__)
@@ -96,6 +91,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
 from sklearn.linear_model import LogisticRegression
+
 # 制作 3 类数据集进行分类
 centers = [[-5, 0], [0, 1.5], [5, -1]]
 X, y = make_blobs(n_samples=1000, centers=centers, random_state=40)
@@ -130,15 +126,19 @@ for multi_class in ('multinomial', 'ovr'):
     ymin, ymax = plt.ylim()
     coef = clf.coef_
     intercept = clf.intercept_
+
+
     def plot_hyperplane(c, color):
         def line(x0):
             return (-(x0 * coef[c, 0]) - intercept[c]) / coef[c, 1]
+
         plt.plot([xmin, xmax], [line(xmin), line(xmax)],
                  ls="--", color=color)
+
+
     for i, color in zip(clf.classes_, colors):
         plot_hyperplane(i, color)
 plt.show()
-
 
 # Logistic Regression 3-class Classifier 逻辑回归 3-类 分类器
 
@@ -192,6 +192,7 @@ print(__doc__)
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import linear_model
+
 # 这是我们的测试集，它只是一条直线，带有一些高斯噪声。
 xmin, xmax = -5, 5
 n_samples = 100
@@ -209,8 +210,12 @@ plt.figure(1, figsize=(4, 3))
 plt.clf()
 plt.scatter(X.ravel(), y, color='black', zorder=20)
 X_test = np.linspace(-5, 10, 300)
+
+
 def model(x):
     return 1 / (1 + np.exp(-x))
+
+
 loss = model(X_test * clf.coef_ + clf.intercept_).ravel()
 plt.plot(X_test, loss, color='red', linewidth=3)
 ols = linear_model.LinearRegression()
@@ -226,4 +231,3 @@ plt.xlim(-4, 10)
 plt.legend(('Logistic Regression Model', 'Linear Regression Model'),
            loc="lower right", fontsize='small')
 plt.show()
-
