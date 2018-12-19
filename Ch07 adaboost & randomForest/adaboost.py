@@ -37,7 +37,7 @@ def loadDataSet(fileName):
 
 
 def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):
-    '''
+    """
     单层决策树分类函数
     Args:
         dataMatrix: 数据矩阵
@@ -48,7 +48,7 @@ def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):
     Returns:
         retArray: 分类结果
 
-    '''
+    """
     retArray = np.ones((np.shape(dataMatrix)[0], 1))
     if threshIneq == 'lt':
         retArray[dataMatrix[:, dimen] <= threshVal] = -1.0
@@ -58,7 +58,7 @@ def stumpClassify(dataMatrix, dimen, threshVal, threshIneq):
 
 
 def buildStump(dataArr, classLabels, D):
-    '''
+    """
     找到数据集上最佳的单层决策树
     Args:
         dataArr: 数据矩阵
@@ -70,7 +70,7 @@ def buildStump(dataArr, classLabels, D):
 		minError: 最小误差
 		bestClasEst: 最佳的分类结果
 
-    '''
+    """
     dataMatrix = np.mat(dataArr)
     labelMat = np.mat(classLabels).T
     m, n = np.shape(dataMatrix)
@@ -103,7 +103,7 @@ def buildStump(dataArr, classLabels, D):
 
 
 def adaBoostTrainDS(dataArr, classLabels, numIt=40):
-    '''
+    """
     使用AdaBoost算法训练分类器
     Args:
         dataArr: 数据矩阵
@@ -114,7 +114,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
         weakClassArr: 训练好的分类器
         aggClassEst: 类别估计累计值
 
-    '''
+    """
     weakClassArr = []
     m = np.shape(dataArr)[0]
     D = np.mat(np.ones((m, 1)) / m)  # 初始化权重
@@ -140,7 +140,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
 
 
 def adaClassify(datToClass, classifierArr):
-    '''
+    """
     AdaBoost分类函数
     Args:
         datToClass:待分类样例
@@ -149,7 +149,7 @@ def adaClassify(datToClass, classifierArr):
     Returns:
         分类结果
 
-    '''
+    """
     dataMatrix = np.mat(datToClass)
     m = np.shape(dataMatrix)[0]
     aggClassEst = np.mat(np.zeros((m, 1)))
@@ -162,7 +162,7 @@ def adaClassify(datToClass, classifierArr):
 
 
 def plotROC(predStrengths, classLabels):
-    '''
+    """
     绘制ROC
     Args:
         predStrengths: 分类器的预测强度
@@ -170,7 +170,7 @@ def plotROC(predStrengths, classLabels):
 
     Returns:
 
-    '''
+    """
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
     cur = (1.0, 1.0)  # 绘制光标的位置
     ySum = 0.0  # 用于计算AUC
@@ -212,7 +212,7 @@ if __name__ == '__main__':
     weakClassArr, aggClassEst = adaBoostTrainDS(dataArr, LabelArr, 50)
     plotROC(aggClassEst.T, LabelArr)
 
-'''
+"""
 集成方法: ensemble method（元算法: meta algorithm） 概述:
 
     ·概念：是对其他算法进行组合的一种形式。
@@ -223,9 +223,9 @@ if __name__ == '__main__':
         a. 投票选举(bagging: 自举汇聚法 bootstrap aggregating): 是基于数据随机重抽样分类器构造的方法
         b. 再学习(boosting): 是基于所有分类器的加权求和的方法
 
-'''
+"""
 
-'''
+"""
 集成方法 场景:
 
     目前 bagging 方法最流行的版本是: 随机森林(random forest)
@@ -233,9 +233,9 @@ if __name__ == '__main__':
     
     目前 boosting 方法最流行的版本是: AdaBoost
     追女友：3个帅哥追同一个美女，第1个帅哥失败->(传授经验：姓名、家庭情况) 第2个帅哥失败->(传授经验：兴趣爱好、性格特点) 第3个帅哥成功
-'''
+"""
 
-'''
+"""
 bagging 和 boosting 区别:
 
     1.bagging 是一种与 boosting 很类似的技术, 所使用的多个分类器的类型（数据量和特征量）都是一致的。
@@ -243,10 +243,10 @@ bagging 和 boosting 区别:
       boosting 是通过调整已有分类器错分的那些数据来获得新的分类器，得出目前最优的结果。
     3.bagging 中的分类器权重是相等的；而 boosting 中的分类器加权求和，所以权重并不相等，每个权重代表的是其对应
       分类器在上一轮迭代中的成功度。
-'''
+"""
 
 
-'''
+"""
 AdaBoost 原理
 
     AdaBoost 工作原理
@@ -268,4 +268,4 @@ AdaBoost 原理
         * 优点：泛化（由具体的、个别的扩大为一般的）错误率低，易编码，可以应用在大部分分类器上，无参数调节。
         * 缺点：对离群点敏感。
         * 适用数据类型：数值型和标称型数据。
-'''
+"""

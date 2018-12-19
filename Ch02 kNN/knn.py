@@ -11,7 +11,7 @@ import numpy as np
 import operator
 import os
 
-'''
+"""
 优化约会网站的配对效果开发流程
 
     收集数据：提供文本文件
@@ -22,7 +22,7 @@ import os
             测试样本和非测试样本的区别在于：
                 测试样本是已经完成分类的数据，如果预测分类与实际类别不同，则标记为一个错误。
     使用算法：产生简单的命令行程序，然后海伦可以输入一些特征数据以判断对方是否为自己喜欢的类型。
-'''
+"""
 
 
 def createDataSet():
@@ -32,14 +32,14 @@ def createDataSet():
 
 
 def classify0(inX, dataSet, labels, k):
-    '''
+    """
     KNN实现
     :param inX:     用于分类的输入向量是inX
     :param dataSet: 输入的训练样本集为dataSet
     :param labels:  标签向量为labels
     :param k:       k表示用于选择最近邻居的数目
     :return:        排序后的KNN输出
-    '''
+    """
     # 距离计算
     dataSetSize = dataSet.shape[0]
     diffMat = np.tile(inX, (dataSetSize, 1)) - dataSet
@@ -68,11 +68,11 @@ def test1():
 
 
 def file2matrix(filename):
-    '''
+    """
     文本记录转换为 NumPy
     :param filename: 待解析的文本路径
     :return: numpy对象=>数据矩阵 returnMat 和对应的类别 classLabelVector
-    '''
+    """
     fr = open(filename)
     numberOfLines = len(fr.readlines())  # 获得文件中的数据行的行数
     # 生成对应的空矩阵
@@ -104,7 +104,7 @@ def file2matrix(filename):
 
 
 def autoNorm(dataSet):
-    '''
+    """
     归一化特征值
     归一化是一个统一权重的过程
     归一化的目的就是使得预处理的数据被限定在一定的范围内（比如[0,1]或者[-1,1]），从而消除奇异样本数据导致的不良影响
@@ -113,7 +113,7 @@ def autoNorm(dataSet):
     归一化公式：
         Y = (X-Xmin)/(Xmax-Xmin)
         其中的 min 和 max 分别是数据集中的最小特征值和最大特征值。该函数可以自动将数字特征值转化为0到1的区间。
-    '''
+    """
     # 计算每种属性的最大值、最小值、范围
     minVals = dataSet.min(0)  # axis=0 从列中选取最小值
     maxVals = dataSet.max(0)
@@ -129,10 +129,10 @@ def autoNorm(dataSet):
 
 
 def datingClassTest():
-    '''
+    """
     训练数据 输出训练结果
     :return: 正确率 错误率等...
-    '''
+    """
     # 设置测试数据的的一个比例（训练数据集比例=1-hoRatio）
     hoRatio = 0.1  # 测试范围,一部分测试一部分作为样本
     # 从文件中加载数据
@@ -154,7 +154,7 @@ def datingClassTest():
     print(errorCount)
 
 
-'''
+"""
 手写数字识别系统开发流程
 
     收集数据：提供文本文件。
@@ -166,15 +166,15 @@ def datingClassTest():
              则标记为一个错误
     使用算法：本例没有完成此步骤，若你感兴趣可以构建完整的应用程序，从图像中提取
              数字，并完成数字识别，美国的邮件分拣系统就是一个实际运行的类似系统
-'''
+"""
 
 
 def img2vector(filename):
-    '''
+    """
     把输入图片转换为矩阵
     :param filename: 输入图片路径
     :return: 图片转换矩阵
-    '''
+    """
     # 创建1×1024的NumPy数组，然后打开给定的文件
     returnVect = np.zeros((1, 1024))
     fr = open(filename)
@@ -188,10 +188,10 @@ def img2vector(filename):
 
 
 def handwritingClassTest():
-    '''
+    """
     手写识别
     :return:
-    '''
+    """
     # 1.导入训练数据
     hwLabels = []
     trainingFileList = os.listdir('../data/ch02/trainingDigits')  # load the training set
@@ -227,7 +227,7 @@ if __name__ == '__main__':
     datingClassTest()
     handwritingClassTest()
 
-'''
+"""
 KNN 概述:
 
     k 近邻算法的输入为实例的特征向量，对应于特征空间的点；输出为实例的类别，可以取多类。
@@ -237,9 +237,9 @@ KNN 概述:
 
     k 近邻算法实际上利用训练数据集对特征向量空间进行划分，并作为其分类的“模型”。 
     k值的选择、距离度量以及分类决策规则是k近邻算法的三个基本要素。
-'''
+"""
 
-'''
+"""
 KNN 工作原理:
 
     1.假设有一个带有标签的样本数据集（训练样本集），其中包含每条数据与所属分类的对应关系。
@@ -248,9 +248,9 @@ KNN 工作原理:
         b.对求得的所有距离进行排序（从小到大，越小表示越相似）。
         c.取前 k （k 一般小于等于 20 ）个样本数据对应的分类标签。
     3.求 k 个数据中出现次数最多的分类标签作为新数据的分类。
-'''
+"""
 
-'''
+"""
 KNN 开发流程:
 
     收集数据：任何方法
@@ -259,17 +259,17 @@ KNN 开发流程:
     训练算法：此步骤不适用于 k-近邻算法
     测试算法：计算错误率
     使用算法：输入样本数据和结构化的输出结果，然后运行 k-近邻算法判断输入数据分类属于哪个分类，最后对计算出的分类执行后续处理
-'''
+"""
 
-'''
+"""
 KNN 算法特点:
 
     优点：精度高、对异常值不敏感、无数据输入假定
     缺点：计算复杂度高、空间复杂度高
     适用数据范围：数值型和标称型
-'''
+"""
 
-'''
+"""
 要素发现:
     ·k 值的选择:
 
@@ -295,4 +295,4 @@ KNN 算法特点:
 
     ·分类决策规则
         ·k 近邻算法中的分类决策规则往往是多数表决，即由输入实例的 k 个邻近的训练实例中的多数类决定输入实例的类。
-'''
+"""

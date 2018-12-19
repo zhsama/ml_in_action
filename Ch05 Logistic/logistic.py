@@ -14,10 +14,10 @@ import numpy as np
 
 # 从文件读取数据
 def loadDataSet():
-    '''
+    """
     从文件读取数据
     :return:
-    '''
+    """
     dataMat = []
     labelMat = []
     fr = open('testSet.txt')
@@ -36,13 +36,13 @@ def sigmoid(inX):
 
 # Logistic 回归梯度上升优化算法
 def gradAscent(dataMatIn, classLabels):
-    '''
+    """
     Logistic 回归梯度上升优化算法
     :param dataMatIn: 一个2维NumPy数组，每列分别代表每个不同的特征，每行则代表每个训练样本。
     :param classLabels:类别标签 它是一个 1*100 的行向量
                        为了便于矩阵计算，需要将该行向量转换为列向量，做法是将原向量转置，再将它赋值给labelMat
     :return: 回归系数
-    '''
+    """
     # 转化为矩阵[[1,1,2],[1,1,2]....]
     dataMatrix = np.mat(dataMatIn)  # 转换为 NumPy 矩阵
     # 转化为矩阵[[0,1,0,1,0,1.....]]，并转制[[0],[1],[0].....]
@@ -79,10 +79,10 @@ def gradAscent(dataMatIn, classLabels):
 
 # 使用 Logistic 回归进行分类
 def testLR():
-    '''
+    """
     使用 Logistic 回归进行分类
     :return: 分类结果
-    '''
+    """
     # 1.收集并准备数据
     dataMat, labelMat = loadDataSet('testSet.txt')
     # print(dataMat, '---\n', labelMat)
@@ -102,7 +102,7 @@ def testLR():
 
 # 随机梯度上升
 def stocGradAscent0(dataMatrix, classLabels):
-    '''
+    """
     随机梯度上升
     梯度上升优化算法在每次更新数据集时都需要遍历整个数据集，计算复杂都较高
     随机梯度上升一次只用一个样本点来更新回归系数
@@ -110,7 +110,7 @@ def stocGradAscent0(dataMatrix, classLabels):
     :param classLabels:类别标签 它是一个 1*100 的行向量
                        为了便于矩阵计算，需要将该行向量转换为列向量，做法是将原向量转置，再将它赋值给labelMat
     :return: 回归系数
-    '''
+    """
     m, n = np.shape(dataMatrix)
     alpha = 0.01
     # n*1的矩阵
@@ -131,13 +131,13 @@ def stocGradAscent0(dataMatrix, classLabels):
 
 # 数据可视化
 def plotBestFit(dataArr, labelMat, weights):
-    '''
+    """
     数据可视化展示
     :param dataArr: 样本数据的特征
     :param labelMat: 样本数据的类别标签，即目标变量
     :param weights: 回归系数
     :return:
-    '''
+    """
     n = np.shape(dataArr)[0]
     xcord1 = []
     ycord1 = []
@@ -171,13 +171,13 @@ def plotBestFit(dataArr, labelMat, weights):
 
 # 随机梯度上升算法（随机化）
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
-    '''
+    """
     随机梯度上升算法（随机化）
     :param dataMatrix:
     :param classLabels:
     :param numIter:
     :return:
-    '''
+    """
     m, n = np.shape(dataMatrix)
     weights = np.ones(n)  # 创建与列数相同的矩阵的系数矩阵，所有的元素都是1
     # 随机梯度, 循环150,观察是否收敛
@@ -203,13 +203,13 @@ def stocGradAscent1(dataMatrix, classLabels, numIter=150):
 
 # 分类函数，根据回归系数和特征向量来计算 Sigmoid的值
 def classifyVector(inX, weights):
-    '''
+    """
     分类函数，根据回归系数和特征向量来计算 Sigmoid的值
     大于0.5函数返回1，否则返回0
     :param inX: 特征向量，features
     :param weights: 根据梯度下降/随机梯度下降 计算得到的回归系数
     :return: 如果 prob 计算大于 0.5 函数返回 1 否则返回 0
-    '''
+    """
     prob = sigmoid(sum(inX * weights))
     if prob > 0.5:
         return 1.0
@@ -219,10 +219,10 @@ def classifyVector(inX, weights):
 
 # 打开测试集和训练集,并对数据进行格式化处理
 def colicTest():
-    '''
+    """
     打开测试集和训练集,并对数据进行格式化处理
     :return: 分类错误率
-    '''
+    """
     frTrain = open('horseColicTraining.txt')
     frTest = open('horseColicTest.txt')
     trainingSet = []
@@ -256,10 +256,10 @@ def colicTest():
 
 # 调用 colicTest() 10次并求结果的平均值
 def multiTest():
-    '''
+    """
     调用 colicTest() 10次并求结果的平均值
     :return:
-    '''
+    """
     numTests = 100
     errorSum = 0.0
     for k in range(numTests):
@@ -267,7 +267,7 @@ def multiTest():
     print("after %d iterations the average error rate is: %f" % (numTests, errorSum / float(numTests)))
 
 
-'''
+"""
 Logistic 回归 工作原理
 
     每个回归系数初始化为 1
@@ -275,9 +275,9 @@ Logistic 回归 工作原理
         计算整个数据集的梯度
         使用 步长 x 梯度 更新回归系数的向量
     返回回归系数
-'''
+"""
 
-'''
+"""
 Logistic 回归 开发流程:
 
     ·收集数据: 采用任意方法收集数据
@@ -287,12 +287,12 @@ Logistic 回归 开发流程:
     ·测试算法: 一旦训练步骤完成，分类将会很快。
     ·使用算法: 首先，我们需要输入一些数据，并将其转换成对应的结构化数值；接着，基于训练好的回归系数就可以
       对这些数值进行简单的回归计算，判定它们属于哪个类别；在这之后，我们就可以在输出的类别上做一些其他分析工作。
-'''
+"""
 
-'''
+"""
 Logistic 回归 算法特点:
     
     ·优点: 计算代价不高，易于理解和实现。
     ·缺点: 容易欠拟合，分类精度可能不高。
     ·适用数据类型: 数值型和标称型数据。
-'''
+"""

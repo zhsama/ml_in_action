@@ -11,7 +11,7 @@ import random
 
 
 def scrapePage(retX, retY, inFile, yr, numPce, origPrc):
-    '''
+    """
     从页面读取数据，生成retX和retY列表
     Args:
         retX: 数据X
@@ -23,7 +23,7 @@ def scrapePage(retX, retY, inFile, yr, numPce, origPrc):
 
     Returns:
 
-    '''
+    """
     # 打开并读取HTML文件
     with open(inFile, encoding='utf-8') as f:
         html = f.read()
@@ -67,7 +67,7 @@ def scrapePage(retX, retY, inFile, yr, numPce, origPrc):
 
 
 def ridgeRegres(xMat, yMat, lam=0.2):
-    '''
+    """
     岭回归
     Args:
         xMat: x数据集
@@ -77,7 +77,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
     Returns:
         ws: 回归系数
 
-    '''
+    """
     xTx = xMat.T * xMat
     denom = xTx + np.eye(np.shape(xMat)[1]) * lam
     if np.linalg.det(denom) == 0.0:
@@ -88,7 +88,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
 
 
 def setDataCollect(retX, retY):
-    '''
+    """
     依次读取六种乐高套装的数据，并生成数据矩阵
     Args:
         retX:
@@ -96,7 +96,7 @@ def setDataCollect(retX, retY):
 
     Returns:
 
-    '''
+    """
     scrapePage(retX, retY, './lego/lego8288.html', 2006, 800, 49.99)  # 2006年的乐高8288,部件数目800,原价49.99
     scrapePage(retX, retY, './lego/lego10030.html', 2002, 3096, 269.99)  # 2002年的乐高10030,部件数目3096,原价269.99
     scrapePage(retX, retY, './lego/lego10179.html', 2007, 5195, 499.99)  # 2007年的乐高10179,部件数目5195,原价499.99
@@ -106,7 +106,7 @@ def setDataCollect(retX, retY):
 
 
 def regularize(xMat, yMat):
-    '''
+    """
     数据标准化
     Args:
         xMat: x数据集
@@ -115,7 +115,7 @@ def regularize(xMat, yMat):
     Returns:
         inxMat: 标准化后的x数据集
         inyMat: 标准化后的y数据集
-    '''
+    """
     inxMat = xMat.copy()  # 数据拷贝
     inyMat = yMat.copy()
     yMean = np.mean(yMat, 0)  # 行与行操作，求均值
@@ -130,7 +130,7 @@ def regularize(xMat, yMat):
 
 
 def rssError(yArr, yHatArr):
-    '''
+    """
     计算平方误差
     Args:
         yArr: 预测值
@@ -138,12 +138,12 @@ def rssError(yArr, yHatArr):
 
     Returns:
 
-    '''
+    """
     return ((yArr - yHatArr) ** 2).sum()
 
 
 def standRegres(xArr, yArr):
-    '''
+    """
     计算回归系数w
     Args:
         xArr: x数据集
@@ -151,7 +151,7 @@ def standRegres(xArr, yArr):
 
     Returns:
         ws: 回归系数
-    '''
+    """
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
     xTx = xMat.T * xMat  # 根据文中推导的公示计算回归系数
@@ -163,7 +163,7 @@ def standRegres(xArr, yArr):
 
 
 def crossValidation(xArr, yArr, numVal=10):
-    '''
+    """
     交叉验证岭回归
     Args:
         xArr: x数据集
@@ -172,7 +172,7 @@ def crossValidation(xArr, yArr, numVal=10):
 
     Returns:
 
-    '''
+    """
     m = len(yArr)  # 统计样本个数
     indexList = list(range(m))  # 生成索引值列表
     errorMat = np.zeros((numVal, 30))  # create error mat 30columns numVal rows
@@ -212,7 +212,7 @@ def crossValidation(xArr, yArr, numVal=10):
 
 
 def ridgeTest(xArr, yArr):
-    '''
+    """
     岭回归测试
     Args:
         xArr: x数据集
@@ -221,7 +221,7 @@ def ridgeTest(xArr, yArr):
     Returns:
         wMat: 回归系数矩阵
 
-    '''
+    """
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
     # 数据标准化
@@ -239,11 +239,11 @@ def ridgeTest(xArr, yArr):
 
 
 def useStandRegres():
-    '''
+    """
     使用简单的线性回归
     Returns:
 
-    '''
+    """
     lgX = []
     lgY = []
     setDataCollect(lgX, lgY)
@@ -255,11 +255,11 @@ def useStandRegres():
 
 
 def usesklearn():
-    '''
+    """
     使用sklearn
     Returns:
 
-    '''
+    """
     from sklearn import linear_model
     reg = linear_model.Ridge(alpha=.5)
     lgX = []

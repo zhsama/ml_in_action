@@ -12,10 +12,10 @@ import os, sys
 sys.path.append(os.pardir)
 import logistic
 
-'''
+"""
 运行随机梯度上升算法，在数据集的一次遍历中回归系数与迭代次数的关系图。
 回归系数经过大量迭代才能达到稳定值，并且仍然有局部的波动现象。
-'''
+"""
 
 
 def stocGradAscent0(dataMatrix, classLabels):

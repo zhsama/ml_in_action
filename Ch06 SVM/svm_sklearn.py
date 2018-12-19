@@ -6,10 +6,8 @@
 # @File    : svm_sklearn.py
 # @Software: PyCharm
 import matplotlib.pyplot as plt
-import numpy as npw
+import numpy as np
 from sklearn import svm
-
-print(__doc__)
 
 # 创建40个分离点
 np.random.seed(0)
@@ -20,13 +18,13 @@ np.random.seed(0)
 
 
 def loadDataSet(fileName):
-    '''
+    """
     对文件进行逐行解析，从而得到第行的类标签和整个数据矩阵
     :param fileName: 文件名
     :return: dataMat  数据矩阵
              labelMat 类标签
 
-    '''
+    """
     dataMat = []
     labelMat = []
     fr = open(fileName)

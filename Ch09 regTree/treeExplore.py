@@ -6,7 +6,7 @@
 # @File    : treeExplore.py
 # @Software: PyCharm
 import regTrees
-from Tkinter import *
+from tkinter import *
 from numpy import *
 
 import matplotlib
@@ -18,7 +18,7 @@ matplotlib.use('TkAgg')
 
 def test_widget_text(root):
     mylabel = Label(root, text="helloworld")
-    # 相当于告诉 布局管理器(Geometry Manager),如果不设定位置，默认在 0行0列的位置
+    # 相当于告诉布局管理器(Geometry Manager),如果不设定位置，默认在 0行0列的位置
     mylabel.grid()
 
 
@@ -39,10 +39,10 @@ def reDraw(tolS, tolN):
         yHat = regTrees.createForeCast(myTree, reDraw.testDat)
 
     # use scatter for data set
-    reDraw.a.scatter(reDraw.rawDat[:, 0], reDraw.rawDat[:, 1], s=5)
+    reDraw.a.scatter(array(reDraw.rawDat[:, 0]), array(reDraw.rawDat[:, 1]), s=5)
     # use plot for yHat
     reDraw.a.plot(reDraw.testDat, yHat, linewidth=2.0, c='red')
-    reDraw.canvas.show()
+    reDraw.canvas.draw()
 
 
 def getInputs():
@@ -102,7 +102,7 @@ def main(root):
     # 创建一个画板 canvas
     reDraw.f = Figure(figsize=(5, 4), dpi=100)
     reDraw.canvas = FigureCanvasTkAgg(reDraw.f, master=root)
-    reDraw.canvas.show()
+    reDraw.canvas.draw()
     reDraw.canvas.get_tk_widget().grid(row=0, columnspan=3)
 
     reDraw.rawDat = mat(regTrees.loadDataSet('../data/ch09/sine.txt'))

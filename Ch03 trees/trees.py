@@ -38,13 +38,13 @@ def createDataSet():
 
 
 def splitDataSet(dataSet, axis, value):
-    '''
+    """
     按照给定特征划分数据集
     :param dataSet: 输入数据集
     :param axis: 用于划分数据集的特征值
     :param value: 需要返回的特征值
     :return: 划分后的数据集
-    '''
+    """
     retDataSet = []  # 创建新列表
     for featVec in dataSet:
         if featVec[axis] == value:
@@ -55,14 +55,14 @@ def splitDataSet(dataSet, axis, value):
 
 
 def chooseBestFeatureToSplit(dataSet):
-    '''
+    """
     将遍历整个数据集，循环计算香农熵和splitDataSet()函数，找到最好的特征划分方式
     :param dataSet: 输入数据集
     :return: 最佳切分方法
     输入数据集要求:
         ①数据由列表组成 且数据长度相同
         ②数据最后一列是数据的离散属性(标签)
-    '''
+    """
     numFeatures = len(dataSet[0]) - 1  # the last column is used for the labels
     baseEntropy = calcShannonEnt(dataSet)  # 计算整个数据集的香农熵
     bestInfoGain = 0.0
@@ -90,11 +90,11 @@ def chooseBestFeatureToSplit(dataSet):
 
 
 def majorityCnt(classList):
-    '''
+    """
     返回出现次数最多的分类名称
     :param classList:
     :return:
-    '''
+    """
     classCount = {}
     for vote in classList:
         if vote not in classCount.keys():
@@ -105,12 +105,12 @@ def majorityCnt(classList):
 
 
 def createTree(dataSet, labels):
-    '''
+    """
     创建决策树
     :param dataSet: 输入数据集
     :param labels: 数据标签
     :return: 创建的树结构
-    '''
+    """
     classList = [example[-1] for example in dataSet]  # 获取输入数据的标签集合
 
     if classList.count(classList[0]) == len(classList):  # 类别标签相同则停止继续划分
@@ -135,13 +135,13 @@ def createTree(dataSet, labels):
 
 
 def classify(inputTree, featLabels, testVec):
-    '''
+    """
     获取列表中的特征标签
     :param inputTree: 输入决策树
     :param featLabels: 特征标签列表
     :param testVec: 测试矩阵
     :return: 匹配结果
-    '''
+    """
     firstStr = list(inputTree.keys())[0]  # 获取第一个特征标签 # dict_keys(['flippers']) # dict_keys(['no surfacing'])
     secondDict = inputTree[firstStr]  # 获取第一个特征标签对应的字典(即根节点的子节点)
     featIndex = featLabels.index(firstStr)  # 特征标签在特征列表中的位置
@@ -155,12 +155,12 @@ def classify(inputTree, featLabels, testVec):
 
 
 def storeTree(inputTree, filename):
-    '''
+    """
     储存决策树
     :param inputTree: 需储存的决策树
     :param filename: 储存文件名
     :return:
-    '''
+    """
     import pickle
     fw = open(filename, 'wb')
     pickle.dump(inputTree, fw)
@@ -168,11 +168,11 @@ def storeTree(inputTree, filename):
 
 
 def grabTree(filename):
-    '''
+    """
     读取已保存的决策树
     :param filename: 决策树文件名
     :return: 决策树
-    '''
+    """
     import pickle
     fr = open(filename, 'rb')
     return pickle.load(fr)
@@ -235,13 +235,13 @@ def ContactLensesTest():
 if __name__ == "__main__":
     fishTest()
     # ContactLensesTest()
-'''
+"""
 决策树概述
 
     ·决策树（Decision Tree）算法主要用来处理分类问题，是最经常使用的数据挖掘算法之一。
-'''
+"""
 
-'''
+"""
 决策树相关概念:
     ·信息熵 & 信息增益:
     
@@ -249,9 +249,9 @@ if __name__ == "__main__":
         ·信息熵（香农熵）： 是一种信息的度量方式，表示信息的混乱程度，也就是说：信息越有序，信息熵越低。例如：火柴有序放在火柴盒
           里，熵值很低，相反，熵值很高。
         ·信息增益： 在划分数据集前后信息发生的变化称为信息增益。
-'''
+"""
 
-'''
+"""
 决策树工作原理:
     ·伪代码createBranch():
     
@@ -264,9 +264,9 @@ if __name__ == "__main__":
             for 每个划分的子集
                 调用函数 createBranch （创建分支的函数）并增加返回结果到分支节点中
         return 分支节点
-'''
+"""
 
-'''
+"""
 决策树开发流程:
     
     ·收集数据：可以使用任何方法。
@@ -275,9 +275,9 @@ if __name__ == "__main__":
     ·训练算法：构造树的数据结构。
     ·测试算法：使用经验树计算错误率。
     ·使用算法：此步骤可以适用于任何监督学习算法，而使用决策树可以更好地理解数据的内在含义。
-'''
+"""
 
-'''
+"""
 决策树算法特点:
 
     ·优点：计算复杂度不高，输出结果易于理解，对中间值的缺失不敏感，可以处理不相关特征数据。
@@ -285,4 +285,4 @@ if __name__ == "__main__":
     ·缺点：可能会产生过度匹配问题。
     
     ·适用数据类型：数值型和标称型。
-'''
+"""

@@ -10,12 +10,12 @@ from time import sleep
 
 
 def loadDataSet(fileName):
-    '''
+    """
     对文件进行逐行解析，从而得到第行的类标签和整个特征矩阵
     :param fileName: 文件名
     :return: dataMat  特征矩阵
              labelMat 类标签
-    '''
+    """
     dataMat = []
     labelMat = []
     fr = open(fileName)
@@ -34,13 +34,13 @@ def selectJrand(i, m):
 
 
 def clipAlpha(aj, H, L):
-    '''
+    """
     调整aj的值，使aj处于 L<=aj<=H
     :param aj: 目标值
     :param H: 最大值
     :param L: 最小值
     :return: 目标值
-    '''
+    """
     if aj > H:
         aj = H
     if L > aj:
@@ -49,7 +49,7 @@ def clipAlpha(aj, H, L):
 
 
 def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
-    '''
+    """
     SMO算法的简单实现
     :param dataMatIn: 特征集合
     :param classLabels: 类别标签
@@ -60,7 +60,7 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     :param maxIter: 退出前最大的循环次数
     :return: b       模型的常量值
              alphas  拉格朗日乘子
-    '''
+    """
     dataMatrix = np.mat(dataMatIn)
     # 矩阵转置 和 .T 一样的功能
     labelMat = np.mat(classLabels).transpose()
@@ -90,12 +90,12 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
             # 约束条件 (KKT条件是解决最优化问题的时用到的一种方法。我们这里提到的最优化问题通常是指对于给定的某一函数，求其在指定作用域上的全局最小值)
             # 0<=alphas[i]<=C，但由于0和C是边界值，我们无法进行优化，因为需要增加一个alphas和降低一个alphas。
             # 表示发生错误的概率：labelMat[i]*Ei 如果超出了 toler， 才需要优化。至于正负号，我们考虑绝对值就对了。
-            '''
+            """
             # 检验训练样本(xi, yi)是否满足KKT条件
             yi*f(i) >= 1 and alpha = 0 (outside the boundary)
             yi*f(i) == 1 and 0<alpha< C (on the boundary)
             yi*f(i) <= 1 and alpha = C (between the boundary)
-            '''
+            """
             if ((labelMat[i] * Ei < -toler) and (alphas[i] < C)) or ((labelMat[i] * Ei > toler) and (alphas[i] > 0)):
 
                 # 如果满足优化的条件，我们就随机选取非i的一个点，进行优化比较
@@ -165,11 +165,11 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 
 
 def img2vector(filename):
-    '''
+    """
     把输入图片转换为矩阵
     :param filename: 输入图片路径
     :return: 图片转换矩阵
-    '''
+    """
     # 创建1×1024的NumPy数组，然后打开给定的文件
     returnVect = np.zeros((1, 1024))
     fr = open(filename)
@@ -183,24 +183,24 @@ def img2vector(filename):
 
 
 def calcEk(oS, k):
-    '''
+    """
     求 Ek误差：预测值-真实值的差
     该过程在完整版的SMO算法中陪出现次数较多，因此将其单独作为一个方法
     :param oS: optStruct对象
     :param k: 具体的某一行
     :return: 预测结果与真实结果比对，计算误差Ek
-    '''
+    """
     fXk = np.multiply(oS.alphas, oS.labelMat).T * oS.K[:, k] + oS.b
     Ek = fXk - float(oS.labelMat[k])
     return Ek
 
 
 def loadImages(dirName):
-    '''
+    """
     加载图片文件
     :param dirName: 图片文件的储存路径
     :return:
-    '''
+    """
     from os import listdir
     hwLabels = []
     print(dirName)
@@ -220,13 +220,13 @@ def loadImages(dirName):
 
 
 def kernelTrans(X, A, kTup):
-    '''
+    """
     计算核空间 将数据转化到高维空间
     :param X: dataMatIn数据集
     :param A: dataMatIn数据集的第i行的数据
     :param kTup: 核函数的信息
     :return:
-    '''
+    """
     m, n = np.shape(X)
     K = np.mat(np.zeros((m, 1)))
     if kTup[0] == 'lin':
@@ -244,12 +244,12 @@ def kernelTrans(X, A, kTup):
 
 
 class optStruct:
-    '''
+    """
     建立的数据结构来保存所有的重要值
-    '''
+    """
 
     def __init__(self, dataMatIn, classLabels, C, toler, kTup):
-        '''
+        """
         初始化类变量
         :param dataMatIn: 数据集
         :param classLabels: 类别标签
@@ -258,7 +258,7 @@ class optStruct:
                   可以通过调节该参数达到不同的结果。
         :param toler: 容错率
         :param kTup: 包含核函数信息的元组
-        '''
+        """
         self.X = dataMatIn
         self.labelMat = classLabels
         self.C = C
@@ -279,14 +279,14 @@ class optStruct:
 
 
 def selectJ(i, oS, Ei):  # this is the second choice -heurstic, and calcs Ej
-    '''
+    """
     返回最优的j和Ej(内循环的启发式方法。)
     :param i: 具体的第i一行
     :param oS: optStruct对象
     :param Ei: 预测结果与真实结果比对，计算误差Ei
     :return: j  随机选出的第j一行
              Ej 预测结果与真实结果比对，计算误差Ej
-    '''
+    """
     maxK = -1
     maxDeltaE = 0
     Ej = 0
@@ -330,38 +330,38 @@ def selectJ(i, oS, Ei):  # this is the second choice -heurstic, and calcs Ej
 
 
 def updateEk(oS, k):
-    '''
+    """
     计算误差值并存入缓存中
     (在对alpha值进行优化之后会用到这个值)
     :param oS: optStruct对象
     :param k: 某一列的行号
     :return:
-    '''
+    """
     # 求 误差：预测值-真实值的差
     Ek = calcEk(oS, k)
     oS.eCache[k] = [1, Ek]
 
 
 def innerL(i, oS):
-    '''
+    """
     内循环代码
     :param i: 具体的某一行
     :param oS: optStruct对象
     :return:  0   找不到最优的值
               1   找到了最优的值，并且oS.Cache到缓存中
-    '''
+    """
     # 求 Ek误差：预测值-真实值的差
     Ei = calcEk(oS, i)
 
     # 约束条件 (KKT条件是解决最优化问题的时用到的一种方法。我们这里提到的最优化问题通常是指对于给定的某一函数，求其在指定作用域上的全局最小值)
     # 0<=alphas[i]<=C，但由于0和C是边界值，我们无法进行优化，因为需要增加一个alphas和降低一个alphas。
     # 表示发生错误的概率：labelMat[i]*Ei 如果超出了 toler， 才需要优化。至于正负号，我们考虑绝对值就对了。
-    '''
+    """
     # 检验训练样本(xi, yi)是否满足KKT条件
     yi*f(i) >= 1 and alpha = 0 (outside the boundary)
     yi*f(i) == 1 and 0<alpha< C (on the boundary)
     yi*f(i) <= 1 and alpha = C (between the boundary)
-    '''
+    """
     if ((oS.labelMat[i] * Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or (
             (oS.labelMat[i] * Ei > oS.tol) and (oS.alphas[i] > 0)):
         # 选择最大的误差对应的j进行优化。效果更明显
@@ -424,7 +424,7 @@ def innerL(i, oS):
 
 
 def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
-    '''
+    """
     完整SMO算法外循环，与smoSimple有些类似，但这里的循环退出条件更多一些
     :param dataMatIn: 数据集
     :param classLabels: 类别标签
@@ -436,7 +436,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
     :param kTup: 包含核函数信息的元组
     :return: b       模型的常量值
              alphas  拉格朗日乘子
-    '''
+    """
     # 创建一个 optStruct 对象
     oS = optStruct(np.mat(dataMatIn), np.mat(classLabels).transpose(), C, toler, kTup)
     iter = 0
@@ -474,7 +474,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
     return oS.b, oS.alphas
 
 
-'''
+"""
 SVM工作原理:
     
     1.寻找最大分类间距
@@ -484,9 +484,9 @@ SVM工作原理:
     4.如果数据集上升到1024维呢？那么需要1023维来分隔数据集，也就说需要N-1维的对象来分隔，这个对象叫做超平面(hyperlane)，
       也就是分类的决策边界。
 
-'''
+"""
 
-'''
+"""
 SMO高效优化算法:
 
     SMO用途：用于训练 SVM
@@ -509,9 +509,9 @@ SMO 伪代码：
                         同时优化这两个向量
                         如果两个向量都不能被优化，退出内循环
                 如果所有向量都没被优化，增加迭代数目，继续下一次循环
-'''
+"""
 
-'''
+"""
 svm开发流程:
 
     ·收集数据：可以使用任意方法。
@@ -520,13 +520,13 @@ svm开发流程:
     ·训练算法：SVM的大部分时间都源自训练，该过程主要实现两个参数的调优。
     ·测试算法：十分简单的计算过程就可以实现。
     ·使用算法：几乎所有分类问题都可以使用SVM，值得一提的是，SVM本身是一个二类分类器，对多类问题应用SVM需要对代码做一些修改。
-'''
+"""
 
-'''
+"""
 svm算法特点:
      
     ·优点：泛化错误率低，计算开销不大，结果易解释。
     ·缺点：对参数调节和核函数的选择敏感，原始分类器不加修改仅适用于处理二类问题。
     ·适用数据类型：数值型和标称型数据。
 
-'''
+"""

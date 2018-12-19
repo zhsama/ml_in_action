@@ -8,7 +8,7 @@
 from random import seed, randrange, random
 
 # randomForest notes
-'''
+"""
 随机森林 概述
 
     ·随机森林指的是利用多棵树对样本进行训练并预测的一种分类器。
@@ -51,7 +51,7 @@ from random import seed, randrange, random
           大量优秀、免费以及开源的实现。
     缺点：劣势在于模型大小、是个很难去解释的黑盒子。
     适用数据范围：数值型和标称型
-'''
+"""
 
 
 # 导入csv文件
@@ -76,14 +76,14 @@ def loadDataSet(filename):
 
 
 def column_to_float(dataSet):
-    '''
+    """
     除了判别列，其他列都转换为float类型
     Args:
         dataSet: 输入数据集
 
     Returns:
 
-    '''
+    """
     featLen = len(dataSet[0]) - 1
     for data in dataSet:
         for column in range(featLen):

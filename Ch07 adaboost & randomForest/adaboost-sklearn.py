@@ -14,8 +14,6 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 
-print(__doc__)
-
 
 def loadDataSet(fileName):
     numFeat = len((open(fileName).readline().split('\t')))
@@ -82,7 +80,6 @@ y_true = np.array([0, 0, 1, 1])
 y_scores = np.array([0.1, 0.4, 0.35, 0.8])
 print('y_scores---', type(y_scores[0]), len(y_scores), y_scores)
 print(metrics.roc_auc_score(y_true, y_scores))
-
 
 # print("-" * 100)
 # print(metrics.roc_auc_score(y[:1], y_2[:1]))

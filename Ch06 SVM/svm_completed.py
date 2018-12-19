@@ -11,12 +11,12 @@ import matplotlib.pyplot as plt
 
 
 class optStruct:
-    '''
+    """
     建立的数据结构来保存所有的重要值
-    '''
+    """
 
     def __init__(self, dataMatIn, classLabels, C, toler, kTup):
-        '''
+        """
         初始化类变量
         :param dataMatIn: 数据集
         :param classLabels: 类别标签
@@ -25,7 +25,7 @@ class optStruct:
                   可以通过调节该参数达到不同的结果。
         :param toler: 容错率
         :param kTup: 包含核函数信息的元组
-        '''
+        """
         self.X = dataMatIn
         self.labelMat = classLabels
         self.C = C
@@ -46,13 +46,13 @@ class optStruct:
 
 
 def kernelTrans(X, A, kTup):  # calc the kernel or transform data to a higher dimensional space
-    '''
+    """
     计算核空间 将数据转化到高维空间
     :param X: dataMatIn数据集
     :param A: dataMatIn数据集的第i行的数据
     :param kTup: 核函数的信息
     :return:
-    '''
+    """
     m, n = shape(X)
     K = mat(zeros((m, 1)))
     if kTup[0] == 'lin':
@@ -70,12 +70,12 @@ def kernelTrans(X, A, kTup):  # calc the kernel or transform data to a higher di
 
 
 def loadDataSet(fileName):
-    '''
+    """
     对文件进行逐行解析，从而得到第行的类标签和整个特征矩阵
     :param fileName: 文件名
     :return: dataMat  特征矩阵
              labelMat 类标签
-    '''
+    """
     dataMat = []
     labelMat = []
     fr = open(fileName)
@@ -87,25 +87,25 @@ def loadDataSet(fileName):
 
 
 def calcEk(oS, k):
-    '''
+    """
     求 Ek误差：预测值-真实值的差
     该过程在完整版的SMO算法中陪出现次数较多，因此将其单独作为一个方法
     :param oS: optStruct对象
     :param k: 具体的某一行
     :return: 预测结果与真实结果比对，计算误差Ek
-    '''
+    """
     fXk = multiply(oS.alphas, oS.labelMat).T * oS.K[:, k] + oS.b
     Ek = fXk - float(oS.labelMat[k])
     return Ek
 
 
 def selectJrand(i, m):
-    '''
+    """
     随机选择一个整数
     :param i: 第一个alpha的下标
     :param m: 所有alpha的数目
     :return: 返回一个不为i的随机数，在0~m之间的整数值
-    '''
+    """
     j = i
     while j == i:
         j = random.randint(0, m - 1)
@@ -113,14 +113,14 @@ def selectJrand(i, m):
 
 
 def selectJ(i, oS, Ei):  # this is the second choice -heurstic, and calcs Ej
-    '''
+    """
     返回最优的j和Ej(内循环的启发式方法。)
     :param i: 具体的第i一行
     :param oS: optStruct对象
     :param Ei: 预测结果与真实结果比对，计算误差Ei
     :return: j  随机选出的第j一行
              Ej 预测结果与真实结果比对，计算误差Ej
-    '''
+    """
     maxK = -1
     maxDeltaE = 0
     Ej = 0
@@ -164,13 +164,13 @@ def selectJ(i, oS, Ei):  # this is the second choice -heurstic, and calcs Ej
 
 
 def updateEk(oS, k):
-    '''
+    """
     计算误差值并存入缓存中
     (在对alpha值进行优化之后会用到这个值)
     :param oS: optStruct对象
     :param k: 某一列的行号
     :return:
-    '''
+    """
 
     # 求 误差：预测值-真实值的差
     Ek = calcEk(oS, k)
@@ -178,26 +178,26 @@ def updateEk(oS, k):
 
 
 def clipAlpha(aj, H, L):
-    '''
+    """
     调整aj的值，使aj处于 L<=aj<=H
     :param aj: 目标值
     :param H: 最大值
     :param L: 最小值
     :return: 目标值
-    '''
+    """
     aj = min(aj, H)
     aj = max(L, aj)
     return aj
 
 
 def innerL(i, oS):
-    '''
+    """
     内循环代码
     :param i: 具体的某一行
     :param oS: optStruct对象
     :return:  0   找不到最优的值
               1   找到了最优的值，并且oS.Cache到缓存中
-    '''
+    """
 
     # 求 Ek误差：预测值-真实值的差
     Ei = calcEk(oS, i)
@@ -205,12 +205,12 @@ def innerL(i, oS):
     # 约束条件 (KKT条件是解决最优化问题的时用到的一种方法。我们这里提到的最优化问题通常是指对于给定的某一函数，求其在指定作用域上的全局最小值)
     # 0<=alphas[i]<=C，但由于0和C是边界值，我们无法进行优化，因为需要增加一个alphas和降低一个alphas。
     # 表示发生错误的概率：labelMat[i]*Ei 如果超出了 toler， 才需要优化。至于正负号，我们考虑绝对值就对了。
-    '''
+    """
     # 检验训练样本(xi, yi)是否满足KKT条件
     yi*f(i) >= 1 and alpha = 0 (outside the boundary)
     yi*f(i) == 1 and 0<alpha< C (on the boundary)
     yi*f(i) <= 1 and alpha = C (between the boundary)
-    '''
+    """
     if ((oS.labelMat[i] * Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or (
             (oS.labelMat[i] * Ei > oS.tol) and (oS.alphas[i] > 0)):
         # 选择最大的误差对应的j进行优化。效果更明显
@@ -273,7 +273,7 @@ def innerL(i, oS):
 
 
 def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
-    '''
+    """
     完整SMO算法外循环，与smoSimple有些类似，但这里的循环退出条件更多一些
     :param dataMatIn: 数据集
     :param classLabels: 类别标签
@@ -285,7 +285,7 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
     :param kTup: 包含核函数信息的元组
     :return: b       模型的常量值
              alphas  拉格朗日乘子
-    '''
+    """
 
     # 创建一个 optStruct 对象
     oS = optStruct(mat(dataMatIn), mat(classLabels).transpose(), C, toler, kTup)
@@ -334,13 +334,13 @@ def smoP(dataMatIn, classLabels, C, toler, maxIter, kTup=('lin', 0)):
 
 
 def calcWs(alphas, dataArr, classLabels):
-    '''
+    """
     基于alpha计算w的值
     :param alphas: 拉格朗日乘子
     :param dataArr: 特征值数据集
     :param classLabels: 目标变量数据集
     :return: 回归系数
-    '''
+    """
     X = mat(dataArr)
     labelMat = mat(classLabels).T
     m, n = shape(X)
@@ -394,11 +394,11 @@ def img2vector(filename):
 
 
 def loadImages(dirName):
-    '''
+    """
     加载图片文件
     :param dirName: 图片文件的储存路径
     :return:
-    '''
+    """
     from os import listdir
     hwLabels = []
     print(dirName)

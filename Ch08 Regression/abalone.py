@@ -9,14 +9,14 @@ import numpy as np
 
 
 def loadDataSet(fileName):
-    '''
+    """
     加载数据
     Args:
         fileName: 文件名
     Returns:
         xArr: x数据集
         yArr: y数据集
-    '''
+    """
     numFeat = len(open(fileName).readline().split('\t')) - 1
     xArr = []
     yArr = []
@@ -32,7 +32,7 @@ def loadDataSet(fileName):
 
 
 def lwlr(testPoint, xArr, yArr, k=1.0):
-    '''
+    """
     使用局部加权线性回归计算回归系数w
     Args:
         testPoint - 测试样本点
@@ -42,7 +42,7 @@ def lwlr(testPoint, xArr, yArr, k=1.0):
     Returns:
         ws - 回归系数
     
-    '''
+    """
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
     m = np.shape(xMat)[0]
@@ -59,7 +59,7 @@ def lwlr(testPoint, xArr, yArr, k=1.0):
 
 
 def lwlrTest(testArr, xArr, yArr, k=1.0):
-    '''
+    """
     局部加权线性回归测试
     Args:
         testArr - 测试数据集,测试集
@@ -69,7 +69,7 @@ def lwlrTest(testArr, xArr, yArr, k=1.0):
     Returns:
         ws - 回归系数
     
-    '''
+    """
     m = np.shape(testArr)[0]  # 计算测试数据集大小
     yHat = np.zeros(m)
     for i in range(m):  # 对每个样本点进行预测
@@ -78,7 +78,7 @@ def lwlrTest(testArr, xArr, yArr, k=1.0):
 
 
 def standRegres(xArr, yArr):
-    '''
+    """
     计算回归系数w
     Args:
         xArr - x数据集
@@ -86,7 +86,7 @@ def standRegres(xArr, yArr):
     Returns:
         ws - 回归系数
     
-    '''
+    """
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
     xTx = xMat.T * xMat  # 根据文中推导的公示计算回归系数
@@ -98,14 +98,14 @@ def standRegres(xArr, yArr):
 
 
 def rssError(yArr, yHatArr):
-    '''
+    """
     误差大小评价函数
     Args:
         yArr - 真实数据
         yHatArr - 预测数据
     Returns:
         误差大小
-    '''
+    """
     return ((yArr - yHatArr) ** 2).sum()
 
 

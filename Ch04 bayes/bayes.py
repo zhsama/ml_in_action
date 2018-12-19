@@ -26,11 +26,11 @@
 #
 #
 # def createVocabList(dataSet):
-#     '''
+#     """
 #     获取所有单词的集合
 #     :param dataSet: 输入数据集
 #     :return: 所有单词的集合(即不含重复元素的单词列表)
-#     '''
+#     """
 #     vocabSet = set([])  # 创建空列表
 #     for document in dataSet:
 #         vocabSet = vocabSet | set(document)  # 操作符 | 用于求两个集合的并集
@@ -38,12 +38,12 @@
 #
 #
 # def setOfWords2Vec(vocabList, inputSet):
-#     '''
+#     """
 #     遍历查看该单词是否出现 出现该单词则将该单词置1
 #     :param vocabList: 所有单词集合列表
 #     :param inputSet: 输入数据集
 #     :return: 匹配列表[0,1,0,1...]，其中 1与0 表示词汇表中的单词是否出现在输入的数据集中
-#     '''
+#     """
 #     returnVec = [0] * len(vocabList)  # 创建一个和词汇表等长的向量 将其元素都设置为0
 #     # 遍历文档中的所有单词，如果出现了词汇表中的单词，则将输出的文档向量中的对应值设为1
 #     for word in inputSet:
@@ -189,12 +189,12 @@
 #
 #
 # def bagOfWords2VecMN(vocabList, inputSet):
-#     '''
+#     """
 #     朴素贝叶斯词袋模型
 #     :param vocabList: 所有单词集合列表
 #     :param inputSet: 输入数据集
 #     :return:
-#     '''
+#     """
 #     returnVec = [0] * len(vocabList)
 #     for word in inputSet:
 #         if word in inputSet:
@@ -211,21 +211,21 @@
 #
 #
 # def textParse(bigString):
-#     '''
+#     """
 #     文件解析
 #     :param bigString: 含大写字母的字符串
 #     :return: 去掉少于2位的字符串 并且全部转为小写
-#     '''
+#     """
 #     import re
 #     listOfTokens = re.split(r'\W*', bigString)
 #     return [tok.lower() for tok in listOfTokens if len(tok) > 2]
 #
 #
 # def spamTest():
-#     '''
+#     """
 #     对贝叶斯垃圾邮件分类器进行自动化处理。
 #     :return: 对测试集中的每封邮件进行分类，若邮件分类错误，则错误数加 1，最后返回总的错误百分比。
-#     '''
+#     """
 #     docList = []
 #     classList = []
 #     fullText = []
@@ -278,12 +278,12 @@
 # ##### 使用朴素贝叶斯分类器从个人广告中获取区域倾向 #####
 #
 # def calcMostFreq(vocabList, fullText):
-#     '''
+#     """
 #     RSS源分类器及高频词去除函数
 #     :param vocabList:
 #     :param fullText:
 #     :return:
-#     '''
+#     """
 #     import operator
 #     freqDict = {}
 #     for token in vocabList:  # 遍历词汇表中的每个词
@@ -293,12 +293,12 @@
 #
 #
 # def localWords(feed1, feed0):
-#     '''
+#     """
 #
 #     :param feed1: RSS源1
 #     :param feed0: RSS源2
 #     :return:
-#     '''
+#     """
 #     import feedparser
 #     docList = []
 #     classList = []
@@ -400,12 +400,12 @@
 #
 #
 # def getTopWords(ny, sf):
-#     '''
+#     """
 #     最具表征性的词汇显示函数
 #     :param ny: RSS源
 #     :param sf: RSS源
 #     :return:
-#     '''
+#     """
 #     import operator
 #     vocabList, p0V, p1V = localWords(ny, sf)  # 用贝叶斯分类器训练并测试
 #
@@ -428,7 +428,7 @@
 #         print(item[0])
 #
 #
-# '''
+# """
 # 朴素贝叶斯工作原理:
 #
 #     ·提取所有文档中的词条并进行去重
@@ -442,9 +442,9 @@
 #         对每个词条:
 #             将该词条的数目除以总词条数目得到的条件概率（P(词条|类别)）
 #     ·返回该文档属于每个类别的条件概率（P(类别|文档的所有词条)）
-# '''
+# """
 #
-# '''
+# """
 # 朴素贝叶斯开发过程:
 #
 #     ·收集数据: 可以使用任何方法。
@@ -453,15 +453,15 @@
 #     ·训练算法: 计算不同的独立特征的条件概率。
 #     ·测试算法: 计算错误率。
 #     ·使用算法: 一个常见的朴素贝叶斯应用是文档分类。可以在任意的分类场景中使用朴素贝叶斯分类器，不一定非要是文本。
-# '''
+# """
 #
-# '''
+# """
 # 朴素贝叶斯 算法特点:
 #
 #     ·优点: 在数据较少的情况下仍然有效，可以处理多类别问题。
 #     ·缺点: 对于输入数据的准备方式较为敏感。
 #     ·适用数据类型: 标称型数据。
-# '''
+# """
 # import feedparser
 #
 # ny = feedparser.parse('http://www.nasa.gov/rss/dyn/image_of_the_day.rss')

@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 
 
 def loadDataSet(fileName):
-    '''
+    """
     对文件进行逐行解析，从而得到第行的类标签和整个特征矩阵
     :param fileName: 文件名
     :return: dataMat  特征矩阵
              labelMat 类标签
-    '''
+    """
     dataMat = []
     labelMat = []
     fr = open(fileName)
@@ -27,12 +27,12 @@ def loadDataSet(fileName):
 
 
 def selectJrand(i, m):
-    '''
+    """
     随机选择一个整数
     :param i: 第一个alpha的下标
     :param m: 所有alpha的数目
     :return: 返回一个不为i的随机数，在0~m之间的整数值
-    '''
+    """
     j = i
     while j == i:
         j = int(random.uniform(0, m))
@@ -40,13 +40,13 @@ def selectJrand(i, m):
 
 
 def clipAlpha(aj, H, L):
-    '''
+    """
     clipAlpha(调整aj的值，使aj处于 L<=aj<=H)
     :param aj: 目标值
     :param H: 最大值
     :param L: 最小值
     :return: 目标值
-    '''
+    """
     if aj > H:
         aj = H
     if L > aj:
@@ -55,7 +55,7 @@ def clipAlpha(aj, H, L):
 
 
 def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
-    '''
+    """
     smo的简单实现
     :param dataMatIn: 数据集
     :param classLabels: 类别标签
@@ -66,7 +66,7 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
     :param maxIter: 退出前最大的循环次数
     :return: b       模型的常量值
              alphas  拉格朗日乘子
-    '''
+    """
     dataMatrix = mat(dataMatIn)
     # 矩阵转置 和 .T 一样的功能
     labelMat = mat(classLabels).transpose()
@@ -96,12 +96,12 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
             # 约束条件 (KKT条件是解决最优化问题的时用到的一种方法。我们这里提到的最优化问题通常是指对于给定的某一函数，求其在指定作用域上的全局最小值)
             # 0<=alphas[i]<=C，但由于0和C是边界值，我们无法进行优化，因为需要增加一个alphas和降低一个alphas。
             # 表示发生错误的概率：labelMat[i]*Ei 如果超出了 toler， 才需要优化。至于正负号，我们考虑绝对值就对了。
-            '''
+            """
             # 检验训练样本(xi, yi)是否满足KKT条件
             yi*f(i) >= 1 and alpha = 0 (outside the boundary)
             yi*f(i) == 1 and 0<alpha< C (on the boundary)
             yi*f(i) <= 1 and alpha = C (between the boundary)
-            '''
+            """
             if ((labelMat[i] * Ei < -toler) and (alphas[i] < C)) or ((labelMat[i] * Ei > toler) and (alphas[i] > 0)):
 
                 # 如果满足优化的条件，我们就随机选取非i的一个点，进行优化比较
@@ -172,13 +172,13 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 
 
 def calcWs(alphas, dataArr, classLabels):
-    '''
+    """
     基于alpha计算w的值
     :param alphas: 拉格朗日乘子
     :param dataArr: 特征值数据集
     :param classLabels: 目标变量数据集
     :return: 回归系数
-    '''
+    """
     X = mat(dataArr)
     labelMat = mat(classLabels).transpose()
     m, n = shape(X)

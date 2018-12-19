@@ -38,11 +38,11 @@ def plotNode(nodeTxt, centerPt, parentPt, nodeType):
 
 
 def getNumLeafs(myTree):
-    '''
+    """
     计算叶子节点的数量
     :param myTree: 输入决策树
     :return: 叶子节点的数量
-    '''
+    """
     numLeafs = 0
     firstStr = list(myTree.keys())[0]
     secondDict = myTree[firstStr]
@@ -55,11 +55,11 @@ def getNumLeafs(myTree):
 
 
 def getTreeDepth(myTree):
-    '''
+    """
     计算决策树的层数
     :param myTree: 输入决策树
     :return: 决策树层数
-    '''
+    """
     maxDepth = 0
     firstStr = list(myTree.keys())[0]
     secondDict = myTree[firstStr]
@@ -74,11 +74,11 @@ def getTreeDepth(myTree):
 
 
 def retrieveTree(i):
-    '''
+    """
     测试层数和叶子节点计算函数
     :param i:
     :return:
-    '''
+    """
     listOfTrees = [{'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}},
                    {'no surfacing': {0: 'no', 1: {'flippers': {0: {'head': {0: 'no', 1: 'yes'}}, 1: 'no'}}}}
                    ]
@@ -86,13 +86,13 @@ def retrieveTree(i):
 
 
 def plotMidText(cntrPt, parentPt, txtString):
-    '''
+    """
     在节点间添加信息
     :param cntrPt: 子节点
     :param parentPt: 父节点
     :param txtString: 添加信息
     :return:
-    '''
+    """
     xMid = (parentPt[0] - cntrPt[0]) / 2.0 + cntrPt[0]
     yMid = (parentPt[1] - cntrPt[1]) / 2.0 + cntrPt[1]
     createPlot.ax1.text(xMid, yMid, txtString, va="center", ha="center", rotation=30)

@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pylab as plt
 from matplotlib.font_manager import FontProperties
 
-'''
+"""
 线性回归 工作原理
 
     1. 读入数据，将数据特征x、特征标签y存储在矩阵x、y中
@@ -32,7 +32,7 @@ from matplotlib.font_manager import FontProperties
     缺点：对非线性的数据拟合不好。
     适用于数据类型：数值型和标称型数据。
 
-'''
+"""
 
 
 def loadDataSet(fileName):
@@ -64,7 +64,7 @@ def loadDataSet(fileName):
 
 
 def standRegres(xArr, yArr):
-    '''
+    """
     Description：
         线性回归
     Args:
@@ -72,7 +72,7 @@ def standRegres(xArr, yArr):
         yArr ：对应于输入数据的类别标签，也就是每个样本对应的目标变量
     Returns:
         ws：回归系数
-    '''
+    """
 
     # mat()函数将xArr，yArr转换为矩阵 mat().T 代表的是对矩阵进行转置操作
     xMat = np.mat(xArr)
@@ -93,14 +93,14 @@ def standRegres(xArr, yArr):
 
 ###### 测试线性回归 ######
 def regression(filename):
-    '''
+    """
     测试线性回归
     Args:
         filename: 输入文件
 
     Returns:
 
-    '''
+    """
     xArr, yArr = loadDataSet(filename)
     xMat = np.mat(xArr)
     yMat = np.mat(yArr)
@@ -115,7 +115,7 @@ def regression(filename):
     plt.show()
 
 
-'''
+"""
 局部加权线性回归(lwlr)
 
     线性回归的一个问题是有可能出现欠拟合现象，因为它求的是具有最小均方差的无偏估计
@@ -126,11 +126,11 @@ def regression(filename):
         ·利用高斯核构造一个权重矩阵 W，对预测点附近的点施加权重
         ·验证 X^TWX 矩阵是否可逆
         ·使用最小二乘法求得 回归系数 w 的最佳估计    
-'''
+"""
 
 
 def lwlr(testPoint, xArr, yArr, k=1.0):
-    '''
+    """
     局部加权线性回归，在待预测点附近的每个点赋予一定的权重，在子集上基于最小均方差来进行普通的回归。
     Args：
         testPoint：样本点
@@ -147,7 +147,7 @@ def lwlr(testPoint, xArr, yArr, k=1.0):
               关于预测点的选取，在我的代码中取的是样本点。其中k是带宽参数，控制w（钟形函数）的宽窄程度，类似于高斯函数的标准差。
         算法思路：假设预测点取样本点中的第i个样本点（共m个样本点），遍历1到m个样本点（含第i个），算出每一个样本点与预测点的距离，
                   也就可以计算出每个样本贡献误差的权值，可以看出w是一个有m个元素的向量（写成对角阵形式）。
-    '''
+    """
     # mat() 函数是将array转换为矩阵的函数， mat().T 是转换为矩阵之后，再进行转置操作
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
@@ -173,7 +173,7 @@ def lwlr(testPoint, xArr, yArr, k=1.0):
 
 
 def lwlrTest(testArr, xArr, yArr, k=1.0):
-    '''
+    """
     测试局部加权线性回归，对数据集中每个点调用 lwlr() 函数
     Args：
         testArr：测试所用的所有样本点
@@ -183,7 +183,7 @@ def lwlrTest(testArr, xArr, yArr, k=1.0):
 
     Returns：
         yHat：预测点的估计值
-    '''
+    """
     # 得到样本点的总数
     m = np.shape(testArr)[0]
     # 构建一个全部都是 0 的 1 * m 的矩阵
@@ -196,7 +196,7 @@ def lwlrTest(testArr, xArr, yArr, k=1.0):
 
 
 def lwlrTestPlot(xArr, yArr, k=1.0):
-    '''
+    """
     首先将 X 排序，其余的都与lwlrTest相同，这样更容易绘图
     Args：
         xArr：样本的特征数据，即 feature
@@ -205,7 +205,7 @@ def lwlrTestPlot(xArr, yArr, k=1.0):
     Return：
         yHat：样本点的估计值
         xCopy：xArr的复制
-    '''
+    """
     # 生成一个与目标变量数目相同的 0 向量
     yHat = np.zeros(np.shape(yArr))
     # 将 xArr 转换为 矩阵形式
@@ -219,7 +219,6 @@ def lwlrTestPlot(xArr, yArr, k=1.0):
 
 
 ###### 局部加权线性回归测试 ######
-'''
 def regression2(filename, k):
     """
     局部加权线性回归测试
@@ -241,15 +240,13 @@ def regression2(filename, k):
     ax.scatter([xMat[:, 1].flatten().A[0]], [np.mat(yArr).T.flatten().A[0]], s=2, c='red')
     plt.show()
 
-'''
-
 
 def plotDataSet():
-    '''
+    """
     绘制数据集
     Returns:
 
-    '''
+    """
     xArr, yArr = loadDataSet('ex0.txt')  # 加载数据集
     n = len(xArr)  # 数据个数
     xcord = []
@@ -266,11 +263,11 @@ def plotDataSet():
 
 
 def plotRegression():
-    '''
+    """
     绘制回归曲线和数据点
     Returns:
 
-    '''
+    """
     xArr, yArr = loadDataSet('ex0.txt')  # 加载数据集
     ws = standRegres(xArr, yArr)  # 计算回归系数
     xMat = np.mat(xArr)  # 创建xMat矩阵
@@ -288,11 +285,11 @@ def plotRegression():
 
 
 def plotlwlrRegression():
-    '''
+    """
     绘制多条局部加权回归曲线
     Returns:
 
-    '''
+    """
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
     xArr, yArr = loadDataSet('ex0.txt')  # 加载数据集
     yHat_1 = lwlrTest(xArr, xArr, yArr, 1.0)  # 根据局部加权线性回归计算yHat
@@ -326,7 +323,7 @@ def plotlwlrRegression():
 
 ###### 预测鲍鱼的年龄 ######
 def rssError(yArr, yHatArr):
-    '''
+    """
     计算分析预测误差的大小
     Args:
         yArr：真实的目标变量
@@ -334,18 +331,18 @@ def rssError(yArr, yHatArr):
 
     Returns:
         计算真实值和估计值得到的值的平方和作为最后的返回值
-    '''
+    """
     return ((yArr - yHatArr) ** 2).sum()
 
 
 def abaloneTest():
-    '''
+    """
     预测鲍鱼的年龄
     Args:
         None
     Returns:
         None
-    '''
+    """
     # 加载数据
     abX, abY = loadDataSet("abalone.txt")
     # 使用不同的核进行预测
@@ -371,7 +368,7 @@ def abaloneTest():
     print("standRegress error Size is:", rssError(abY[100:199], standyHat.T.A))
 
 
-'''
+"""
 缩减系数来 “理解” 数据
 
     如果特征比样本点还多(n > m)，也就是说输入数据的矩阵 x 不是满秩矩阵。非满秩矩阵求逆时会出现问题。
@@ -382,11 +379,11 @@ def abaloneTest():
     这里通过引入 λ 来限制了所有 w 之和，通过引入该惩罚项，能够减少不重要的参数，这个技术在统计学中也叫作 缩减(shrinkage)。
 
     缩减方法可以去掉不重要的参数，因此能更好地理解数据。此外，与简单的线性回归相比，缩减法能取得更好的预测效果。
-'''
+"""
 
 
 def ridgeRegres(xMat, yMat, lam=0.2):
-    '''
+    """
     这个函数实现了给定 lambda 下的岭回归求解。
     如果数据的特征比样本点还多，就不能再使用上面介绍的的线性回归和局部现行回归了，因为计算 (xTx)^(-1)会出现错误。
     如果特征比样本点还多（n > m），也就是说，输入数据的矩阵x不是满秩矩阵。非满秩矩阵在求逆时会出现问题。
@@ -397,7 +394,7 @@ def ridgeRegres(xMat, yMat, lam=0.2):
         lam：引入的一个λ值，使得矩阵非奇异
     Returns：
         经过岭回归公式计算得到的回归系数
-    '''
+    """
 
     xTx = xMat.T * xMat
     # 岭回归就是在矩阵 xTx 上加一个 λI 从而使得矩阵非奇异，进而能对 xTx + λI 求逆
@@ -411,14 +408,14 @@ def ridgeRegres(xMat, yMat, lam=0.2):
 
 
 def ridgeTest(xArr, yArr):
-    '''
+    """
     函数 ridgeTest() 用于在一组 λ 上测试结果
     Args：
         xArr：样本数据的特征，即 feature
         yArr：样本数据的类别标签，即真实数据
     Returns：
         wMat：将所有的回归系数输出到一个矩阵并返回
-    '''
+    """
 
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
@@ -444,7 +441,7 @@ def ridgeTest(xArr, yArr):
 
 
 def regularize(xMat):
-    '''
+    """
     按列进行规范化
     Args:
         xMat: 待规范矩阵
@@ -452,7 +449,7 @@ def regularize(xMat):
     Returns:
         inMat: 规范化后矩阵
 
-    '''
+    """
     inMat = xMat.copy()
     inMeans = np.mean(inMat, 0)  # 计算平均值然后减去它
     inVar = np.var(inMat, 0)  # 计算除以Xi的方差
@@ -461,7 +458,7 @@ def regularize(xMat):
 
 
 def stageWise(xArr, yArr, eps=0.01, numIt=100):
-    '''
+    """
     函数说明:前向逐步线性回归
     Args:
         xArr: x输入数据
@@ -472,7 +469,7 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
     Returns:
 		returnMat: numIt次迭代的回归系数矩阵
 
-    '''
+    """
     xMat = np.mat(xArr)
     yMat = np.mat(yArr).T
     yMean = np.mean(yMat, 0)
@@ -500,14 +497,14 @@ def stageWise(xArr, yArr, eps=0.01, numIt=100):
 
 
 def plotstageWiseMat():
-    '''
+    """
     绘制岭回归系数矩阵
 
     Args:
 
     Returns:
 
-    '''
+    """
     font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
     xArr, yArr = loadDataSet('abalone.txt')
     returnMat = stageWise(xArr, yArr, 0.005, 1000)

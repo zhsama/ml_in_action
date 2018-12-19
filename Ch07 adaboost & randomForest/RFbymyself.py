@@ -16,14 +16,14 @@ def loadCSV(filename):
 
 
 def column_to_float(dataSet):
-    '''
+    """
     除了判别列，其他列都转换为float类型
     Args:
         dataSet: 输入数据集
 
     Returns:
 
-    '''
+    """
     featLen = len(dataSet[0]) - 1
     for data in dataSet:
         for column in range(featLen):

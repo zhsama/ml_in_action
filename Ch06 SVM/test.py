@@ -216,12 +216,12 @@ def innerL(i, oS):
     # 约束条件 (KKT条件是解决最优化问题的时用到的一种方法。我们这里提到的最优化问题通常是指对于给定的某一函数，求其在指定作用域上的全局最小值)
     # 0<=alphas[i]<=C，但由于0和C是边界值，我们无法进行优化，因为需要增加一个alphas和降低一个alphas。
     # 表示发生错误的概率：labelMat[i]*Ei 如果超出了 toler， 才需要优化。至于正负号，我们考虑绝对值就对了。
-    '''
+    """
     # 检验训练样本(xi, yi)是否满足KKT条件
     yi*f(i) >= 1 and alpha = 0 (outside the boundary)
     yi*f(i) == 1 and 0<alpha< C (on the boundary)
     yi*f(i) <= 1 and alpha = C (between the boundary)
-    '''
+    """
     if ((oS.labelMat[i] * Ei < -oS.tol) and (oS.alphas[i] < oS.C)) or ((oS.labelMat[i] * Ei > oS.tol) and (oS.alphas[i] > 0)):
         # 选择最大的误差对应的j进行优化。效果更明显
         j, Ej = selectJ(i, oS, Ei)
