@@ -9,8 +9,6 @@ from time import sleep
 from votesmart import votesmart
 
 
-# import votesmart
-
 def loadDataSet():
     """
     加载数据集
@@ -44,7 +42,7 @@ def createC1(dataSet):
     # 这里必须要使用frozenset而不是set类型，因为之后必须要将这些集合作为字典键值使用，使用frozenset可以实现这一点，而set却做不到。
     # print('sort 后=', C1)
     # print('frozenset=', map(frozenset, C1))
-    return map(frozenset, C1)
+    return list(map(frozenset, C1))
 
 
 def scanD(D, Ck, minSupport):
@@ -197,15 +195,18 @@ def calcConf(freqSet, H, supportData, brl, minConf=0.7):
     return prunedH
 
 
-# 递归计算频繁项集的规则
 def rulesFromConseq(freqSet, H, supportData, brl, minConf=0.7):
-    """rulesFromConseq
+    """
+    递归计算频繁项集的规则
     Args:
-        freqSet 频繁项集中的元素，例如: frozenset([2, 3, 5])
-        H 频繁项集中的元素的集合，例如: [frozenset([2]), frozenset([3]), frozenset([5])]
-        supportData 所有元素的支持度的字典
-        brl 关联规则列表的数组
-        minConf 最小可信度
+        freqSet: 频繁项集中的元素，例如: frozenset([2, 3, 5])
+        H: 频繁项集中的元素的集合，例如: [frozenset([2]), frozenset([3]), frozenset([5])]
+        supportData: 所有元素的支持度的字典
+        brl: 关联规则列表的数组
+        minConf: 最小可信度
+
+    Returns:
+
     """
     """
     * H[0]是freqSet的元素组合的第一个元素,并且H中所有元素的长度都一样长度由aprioriGen(H,m+1)这里的m+1来控制
@@ -267,7 +268,7 @@ def getActionIds():
     votesmart.apikey = 'a7fa40adec6f4a77178799fae4441030'
     actionIdList = []
     billTitleList = []
-    fr = open('recent20bills.txt')
+    fr = open('../data/ch11/recent20bills.txt')
     for line in fr.readlines():
         billNum = int(line.split('\t')[0])
         try:
@@ -329,6 +330,71 @@ def testApriori():
     print('supportData(0.5): ', supportData2)
 
 
+def testGenerateRules():
+    # 加载测试数据集
+    dataSet = loadDataSet()
+    print('dataSet: ', dataSet)
+
+    # Apriori 算法生成频繁项集以及它们的支持度
+    L1, supportData1 = apriori(dataSet, minSupport=0.5)
+    print('L(0.7): ', L1)
+    print('supportData(0.7): ', supportData1)
+
+    # 生成关联规则
+    rules = generateRules(L1, supportData1, minConf=0.5)
+    print('rules: ', rules)
+
+
+def congressVote():
+    """
+    构建美国国会投票记录的事务数据集
+    Returns:
+
+    """
+    # 项目案例
+    actionIdList, billTitleList = getActionIds()
+    # 测试前2个
+    # transDict, itemMeaning = getTransList(actionIdList[: 2], billTitleList[: 2])
+    # transDict 表示 action_id的集合，transDict[key]这个就是action_id对应的选项，例如 [1, 2, 3]
+    transDict, itemMeaning = getTransList(actionIdList, billTitleList)
+    # 得到全集的数据
+    dataSet = [transDict[key] for key in transDict.keys()]
+    L, supportData = apriori(dataSet, minSupport=0.3)
+    rules = generateRules(L, supportData, minConf=0.95)
+    print(rules)
+
+
+def deathCup():
+    """
+    发现毒蘑菇的相似特性
+    Returns:
+
+    """
+    # 得到全集的数据
+    dataSet = [line.split() for line in open("../data/ch11/mushroom.dat").readlines()]
+    L, supportData = apriori(dataSet, minSupport=0.3)
+    # 2表示毒蘑菇，1表示可食用的蘑菇
+    # 找出关于2的频繁子项出来，就知道如果是毒蘑菇，那么出现频繁的也可能是毒蘑菇
+    for item in L[1]:
+        if item.intersection('2'):
+            print(item)
+
+    for item in L[2]:
+        if item.intersection('2'):
+            print(item)
+
+
 if __name__ == '__main__':
+    # 测试 Apriori 算法
     testApriori()
+
+    # 生成关联规则
+    testGenerateRules()
+
+    # 项目案例
+    # 构建美国国会投票记录的事务数据集
+    # congressVote()
+
+    # 发现毒蘑菇的相似特性
+    # deathCup()
     pass

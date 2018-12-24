@@ -260,3 +260,156 @@ def apriori(dataSet, minSupport=0.5):
 ```
 
 ##从频繁项集中挖掘关联规则
+上一节介绍了用于发现 `频繁项集` 的 `Apriori` 算法，现在要解决的问题是如何找出 `关联规则`。
+
+要找到 `关联规则`，我们首先从一个 `频繁项集` 开始。我们知道集合中的元素是不重复的，但我们想知道基于这些元素能否获得其他内容。
+
+某个元素或者某个元素集合可能会推导出另一个元素。从 `杂货店` 的例子可以得到，如果有一个 `频繁项集{豆奶, 莴苣}`，那么就可能有一条 `关联规则“豆奶 ➞ 莴苣”`。
+
+这意味着如果有人购买了豆奶，那么在统计上他会购买莴苣的 `概率较大`。但是,这一条反过来并不总是成立。也就是说，即使 `“豆奶 ➞ 莴苣”` 统计上显著，那么 `“莴苣 ➞豆奶”` 也不一定成立。
+
+之前给出了 `频繁项集` 的量化定义，即它满足最小支持度要求。
+
+对于 `关联规则`，我们也有类似的量化方法，这种量化指标称为 `可信度`。
+
+一条规则P ➞ H的 `可信度` 定义为support(P | H)/support(P)。(记住，在Python中，操作符|表示集合的并操作，而数学上集合并的符号是 U )。
+
+`P | H` 是指所有出现在 `集合P` 或者 `集合H` 中的元素。
+
+由于我们先前已经计算出所有 `频繁项集` 的 `支持度` 了，现在我们要做的只不过是提取这些数据做一次除法运算即可。
+###从一个频繁项集中可以产生多少条关联规则？
+
+如下网格图给出的是从项集{0,1,2,3}产生的所有关联规则。
+![项集{0,1,2,3}产生的所有关联规则](../img/ch11/项集{0,1,2,3}产生的所有关联规则.png) 
+
+与前面的 `频繁项集` 生成一样，我们可以为 `每个频繁项集` 产生 `许多关联规则`。
+
+如果能减少规则的数目来确保问题的可解析，那么计算起来就会好很多。
+
+通过观察，可以知道，如果某条规则并不满足 `最小可信度` 要求，那么该规则的所有子集也不会满足 `最小可信度` 的要求。
+
+如上图所示，假设 `123 -> 3` 并不满足最小可信度要求，那么就知道任何左部为 `{0,1,2} 子集` 的规则也不会满足 `最小可信度` 的要求。 即 `12 -> 03` , `02 -> 13` , `01 -> 23` , `2 -> 013`, `1 -> 023`, `0 -> 123` 都不满足 `最小可信度` 要求。
+
+可以利用关联规则的上述性质属性来减少需要测试的规则数目，跟先前 `Apriori` 算法的套路一样。
+###对两个元素的频繁项计算可信度（confidence）
+```python
+def calcConf(freqSet, H, supportData, brl, minConf=0.7):
+    """
+    对两个元素的频繁项计算可信度（confidence）
+    例如： {1,2}/{1} 或者 {1,2}/{2} 看是否满足条件
+    Args:
+        freqSet: 频繁项集中的元素，例如: frozenset([1, 3])
+        H: 频繁项集中的元素的集合，例如: [frozenset([1]), frozenset([3])]
+        supportData: 所有元素的支持度的字典
+        brl: 关联规则列表的空数组
+        minConf: 最小可信度
+
+    Returns:
+        prunedH: 记录 可信度大于阈值的集合
+
+    """
+    # 记录可信度大于最小可信度（minConf）的集合
+    prunedH = []
+    for conseq in H:
+        # 假设 freqSet = frozenset([1, 3]), H = [frozenset([1]), frozenset([3])]
+        # 那么现在需要求出 frozenset([1]) -> frozenset([3]) 的可信度和 frozenset([3]) -> frozenset([1]) 的可信度
+        # print('confData=', freqSet, H, conseq, freqSet-conseq)
+        # 支持度定义: a->b = support(a|b)/support(a). 假设freqSet = frozenset([1, 3]), conseq = [frozenset([1])]
+        # 那么frozenset([1])至frozenset([3])的可信度为:
+        # support(a|b)/support(a) = supportData[freqSet]/supportData[freqSet-conseq]
+        # = supportData[frozenset([1,3])]/supportData[frozenset([1])]
+        conf = supportData[freqSet] / supportData[freqSet - conseq]
+        if conf >= minConf:
+            # 只要买了 freqSet-conseq 集合，一定会买 conseq 集合（freqSet-conseq 集合和 conseq集合 是全集）
+            print(freqSet - conseq, '-->', conseq, 'conf:', conf)
+            brl.append((freqSet - conseq, conseq, conf))
+            prunedH.append(conseq)
+    return prunedH
+
+```
+###递归计算频繁项集的规则
+```python
+def rulesFromConseq(freqSet, H, supportData, brl, minConf=0.7):
+    """
+    递归计算频繁项集的规则
+    Args:
+        freqSet: 频繁项集中的元素，例如: frozenset([2, 3, 5])
+        H: 频繁项集中的元素的集合，例如: [frozenset([2]), frozenset([3]), frozenset([5])]
+        supportData: 所有元素的支持度的字典
+        brl: 关联规则列表的数组
+        minConf: 最小可信度
+
+    Returns:
+
+    """
+    """
+    * H[0]是freqSet的元素组合的第一个元素,并且H中所有元素的长度都一样长度由aprioriGen(H,m+1)这里的m+1来控制
+    * 该函数递归时，H[0] 的长度从 1 开始增长 1 2 3 ...
+    * 假设 freqSet = frozenset([2, 3, 5]), H = [frozenset([2]), frozenset([3]), frozenset([5])]
+    * 那么 m = len(H[0]) 的递归的值依次为 1 2* 
+    * 在 m = 2 时, 跳出该递归。假设再递归一次，那么 H[0] = frozenset([2, 3, 5])，freqSet = frozenset([2, 3, 5])
+    * 没必要再计算 freqSet 与 H[0] 的关联规则了。
+    """
+    m = len(H[0])
+    if (len(freqSet) > (m + 1)):
+        # print 'freqSet******************', len(freqSet), m + 1, freqSet, H, H[0]
+        # 生成 m+1 个长度的所有可能的 H 中的组合，假设 H = [frozenset([2]), frozenset([3]), frozenset([5])]
+        # 第一次递归调用时生成 [frozenset([2, 3]), frozenset([2, 5]), frozenset([3, 5])]
+        # 第二次 。。。没有第二次，递归条件判断时已经退出了
+        Hmp1 = aprioriGen(H, m + 1)
+        # 返回可信度大于最小可信度的集合
+        Hmp1 = calcConf(freqSet, Hmp1, supportData, brl, minConf)
+        print('Hmp1=', Hmp1)
+        print('len(Hmp1)=', len(Hmp1), 'len(freqSet)=', len(freqSet))
+        # 计算可信度后，还有数据大于最小可信度的话，那么继续递归调用，否则跳出递归
+        if (len(Hmp1) > 1):
+            # print('----------------------', Hmp1)
+            # print(len(freqSet),  len(Hmp1[0]) + 1)
+            rulesFromConseq(freqSet, Hmp1, supportData, brl, minConf)
+
+```
+###关联规则生成函数
+```python
+def generateRules(L, supportData, minConf=0.7):
+    """
+    生成关联规则
+    Args:
+        L: 频繁项集列表
+        supportData: 频繁项集支持度的字典
+        minConf: 最小置信度
+
+    Returns:
+        bigRuleList: 可信度规则列表（关于 (A->B+置信度) 3个字段的组合）
+
+    """
+    bigRuleList = []
+    # 假设 L = [[frozenset([1]), frozenset([3]), frozenset([2]), frozenset([5])], [frozenset([1, 3]), frozenset([2, 5]),
+    # frozenset([2, 3]), frozenset([3, 5])], [frozenset([2, 3, 5])]]
+    for i in range(1, len(L)):
+        # 获取频繁项集中每个组合的所有元素
+        for freqSet in L[i]:
+            # 假设：freqSet= frozenset([1, 3]), H1=[frozenset([1]), frozenset([3])]
+            # 组合总的元素并遍历子元素，并转化为 frozenset 集合，再存放到 list 列表中
+            H1 = [frozenset([item]) for item in freqSet]
+            # 2 个的组合，走 else, 2 个以上的组合，走 if
+            if (i > 1):
+                rulesFromConseq(freqSet, H1, supportData, bigRuleList, minConf)
+            else:
+                calcConf(freqSet, H1, supportData, bigRuleList, minConf)
+    return bigRuleList
+
+```
+到这里为止，通过调用 `generateRules` 函数即可得出我们所需的 关联规则。
+
+* 分级法： 频繁项集->关联规则
+1. 首先从一个频繁项集开始，接着创建一个规则列表，其中规则右部分只包含一个元素，然后对这个规则进行测试。
+2. 接下来合并所有剩余规则来创建一个新的规则列表，其中规则右部包含两个元素。
+* 如下图：
+
+![4种商品的所有组合](../img/ch11/集合(0,1,2,3)中所有可能的项集组合.png)
+
+每次增加频繁项集的大小， `Apriori` 算法都会重新扫描整个数据集。当数据集很大时，这会显著降低频繁项集发现的速度。
+
+下一章会介绍 `FP-growth` 算法，和 `Apriori` 算法相比，该算法只需要对数据库进行两次遍历，能够显著加快发现繁项集的速度。
+
+
