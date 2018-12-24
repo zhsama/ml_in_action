@@ -389,11 +389,11 @@ if __name__ == '__main__':
     testApriori()
 
     # 生成关联规则
-    testGenerateRules()
+    # testGenerateRules()
 
     # 项目案例
     # 构建美国国会投票记录的事务数据集
-    # congressVote()
+    congressVote()
 
     # 发现毒蘑菇的相似特性
     # deathCup()
